@@ -11,6 +11,7 @@ const validateCreateProject = [
     .notEmpty()
     .isLength({ min: 1, max: 10 }),
   body("project_name", "project name is required").notEmpty().isString(),
+  
   check("items", "items must be an array").notEmpty().isArray(),
   check("items.*.technology", "technology is required").notEmpty().isString(),
   check("items.*.material", "material is required").notEmpty().isString(),
