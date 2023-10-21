@@ -3,6 +3,8 @@ const router = express.Router();
 
 import {
   createQuotation,
+  deleteQtItem,
+  deleteQuotation,
   getAllSupplierQuotations,
   getQuotationsByProjectId,
 } from "../controllers/quotations";
@@ -10,11 +12,9 @@ import {
 router.put("/quotations-items", createQuotation);
 router.get("/quotations-items/:supplier_id", getAllSupplierQuotations);
 router.post("/quotations-items/:project_id", getQuotationsByProjectId);
-// router.get("/quotations-items", getAllquotations);
-// router.post("/quotations-items/:project_id", getProjectById);
-// router.delete("/quotations-items/:project_id", deleteProject);
+router.delete("/quotations-items/:quotation_id", deleteQuotation);
 // router.patch("/quotations-items/:project_id", updateProject);
 
-// router.delete("/items/:item_id", deleteItem);
+router.delete("/qt_items/:qt_item_id", deleteQtItem);
 
 export default router;

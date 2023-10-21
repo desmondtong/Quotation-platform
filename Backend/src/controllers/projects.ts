@@ -131,8 +131,8 @@ const deleteProject = async (req: Request, res: Response) => {
 
       // delete items by update is_deleted
       await pool.query(
-        `UPDATE items SET is_deleted =1 
-        WHERE project_id = ?`,
+        `UPDATE items SET is_deleted = 1 
+        WHERE project_id = ? AND is_deleted = 0`,
         [req.params.project_id]
       );
 

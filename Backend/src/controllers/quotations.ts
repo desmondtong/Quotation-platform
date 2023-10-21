@@ -93,13 +93,13 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
 const getQuotationsByProjectId = async (req: Request, res: Response) => {
   try {
     const [quotation] = await pool.query(
-      "SELECT * FROM quotations WHERE project_id = ? AND is_deleted = 0",
-      [req.params.project_id]
+      "SELECT * FROM quotations WHERE project_id = ? AND is_deleted = 0 AND NOT status = ?",
+      [req.params.project_id, "DECLINED"]
     );
 
     for (const item of quotation as RequestBody[]) {
       const [items] = await pool.query(
-        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0 AND status = DECLINED",
+        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0",
         [item.quotation_id]
       );
       item["qt_items"] = items as RequestBody[];
@@ -128,20 +128,20 @@ const deleteQuotation = async (req: Request, res: Response) => {
 
       // delete items by update is_deleted
       await pool.query(
-        `UPDATE items SET is_deleted =1 
-        WHERE project_id = ?`,
-        [req.params.project_id]
+        `UPDATE qt_items SET is_deleted = 1 
+        WHERE quotation_id = ? AND is_deleted = 0`,
+        [req.params.quotation_id]
       );
 
       await pool.query("COMMIT");
-      res.status(201).json({ status: "ok", msg: "Project deleted" });
+      res.status(201).json({ status: "ok", msg: "Quotation deleted" });
     } catch (error: any) {
       await pool.query("ROLLBACK");
 
       console.error(error.message);
       res.status(500).json({
         status: "error",
-        error: "Rollback: Error in deleting project",
+        error: "Rollback: Error in deleting quotation",
       });
     }
   } catch (error: any) {
@@ -183,7 +183,7 @@ const updateProject = async (req: Request, res: Response) => {
           if ("technology" in item) {
             await pool.query(
               `UPDATE items SET technology = ?
-                  WHERE item_id = ?
+                  WHERE qt_item_id = ?
                   `,
               [item.technology, item.item_id]
             );
@@ -247,13 +247,36 @@ const updateProject = async (req: Request, res: Response) => {
   }
 };
 
-const deleteItem = async (req: Request, res: Response) => {
+const deleteQtItem = async (req: Request, res: Response) => {
   try {
-    // delete items by update is_deleted
+    // delete qt_item by update is_deleted
     await pool.query(
-      `UPDATE items SET is_deleted =1 
-            WHERE item_id = ?`,
-      [req.params.item_id]
+      `UPDATE qt_items SET is_deleted =1 
+            WHERE qt_item_id = ?`,
+      [req.params.qt_item_id]
+    );
+
+    // get quotation_id of the deleted qt_item
+    const [id] = await pool.query(
+      "SELECT quotation_id FROM qt_items WHERE qt_item_id = ?",
+      [req.params.qt_item_id]
+    );
+    const quotation_id = (id as RequestBody[])[0]["quotation_id"];
+
+    // re-calculate total price of quotation and update
+    const [sum] = await pool.query(
+      `SELECT SUM(price) FROM qt_items qt
+            JOIN quotations q ON q.quotation_id = qt.quotation_id
+            WHERE qt.is_deleted = 0 AND q.quotation_id = ?`,
+      [quotation_id]
+    );
+
+    const total_price = (sum as RequestBody[])[0]["SUM(price)"];
+
+    await pool.query(
+      `UPDATE quotations SET total_price = ?
+            WHERE quotation_id = ?`,
+      [total_price, quotation_id]
     );
 
     res.status(201).json({ status: "ok", msg: "Item deleted" });
@@ -263,4 +286,10 @@ const deleteItem = async (req: Request, res: Response) => {
   }
 };
 
-export { createQuotation, getAllSupplierQuotations, getQuotationsByProjectId };
+export {
+  createQuotation,
+  getAllSupplierQuotations,
+  getQuotationsByProjectId,
+  deleteQuotation,
+  deleteQtItem,
+};
