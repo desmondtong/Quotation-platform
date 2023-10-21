@@ -48,13 +48,26 @@ const createProject = async (req: Request, res: Response) => {
   }
 };
 
-const getAllCustomerProjects = (req: Request, res: Response) => {
+const getAllCustomerProjects = async (req: Request, res: Response) => {
   try {
-    // await pool.query("SELECT * FROM projects WHERE = ?", [req.params.])
+    const [project] = await pool.query(
+      "SELECT * FROM projects WHERE customer_id = ?",
+      [req.params.customer_id]
+    );
+
+    for (const item of project as RequestBody[]) {
+      const [items] = await pool.query(
+        "SELECT * FROM items WHERE project_id = ?",
+        [item.project_id]
+      );
+      item["items"] = items as RequestBody[];
+    }
+
+    res.status(201).json({ status: "ok", msg: project });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });
   }
 };
 
-export { createProject };
+export { createProject, getAllCustomerProjects };

@@ -9,6 +9,7 @@ export interface RequestBody {
   role?: string;
 
   //projects
+  project_id?: number;
   customer_id?: number;
   project_name?: string;
   items?: RequestBody[];
