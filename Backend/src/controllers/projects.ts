@@ -250,6 +250,22 @@ const updateProject = async (req: Request, res: Response) => {
   }
 };
 
+const deleteItem = async (req: Request, res: Response) => {
+  try {
+    // delete items by update is_deleted
+    await pool.query(
+      `UPDATE items SET is_deleted =1 
+            WHERE item_id = ?`,
+      [req.params.item_id]
+    );
+
+    res.status(201).json({ status: "ok", msg: "Item deleted" });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
 export {
   createProject,
   getAllCustomerProjects,
@@ -257,4 +273,5 @@ export {
   getProjectById,
   deleteProject,
   updateProject,
+  deleteItem,
 };
