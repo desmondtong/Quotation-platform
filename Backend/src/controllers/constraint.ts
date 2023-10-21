@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import pool from "../db/db";
+import { RequestBody } from "../interfaces";
 
 const getRoles = async (req: Request, res: Response) => {
   try {
     const [getAll] = await pool.query("SELECT * FROM roles");
 
-    const roles = (getAll as Array<any>).map((item) => item.role);
+    const roles = (getAll as RequestBody[]).map((item) => item.role);
 
     res.status(201).json(roles);
   } catch (error: any) {
@@ -18,7 +19,7 @@ const getItemStatuses = async (req: Request, res: Response) => {
   try {
     const [getAll] = await pool.query("SELECT * FROM item_statuses");
 
-    const statuses = (getAll as Array<any>).map((item) => item.status);
+    const statuses = (getAll as RequestBody[]).map((item) => item.status);
 
     res.status(201).json(statuses);
   } catch (error: any) {
@@ -31,7 +32,7 @@ const getQtStatuses = async (req: Request, res: Response) => {
   try {
     const [getAll] = await pool.query("SELECT * FROM qt_statuses");
 
-    const statuses = (getAll as Array<any>).map((item) => item.status);
+    const statuses = (getAll as RequestBody[]).map((item) => item.status);
 
     res.status(201).json(statuses);
   } catch (error: any) {
@@ -44,7 +45,7 @@ const getTechnologies = async (req: Request, res: Response) => {
   try {
     const [getAll] = await pool.query("SELECT * FROM technologies");
 
-    const technologies = (getAll as Array<any>).map((item) => item.technology);
+    const technologies = (getAll as RequestBody[]).map((item) => item.technology);
 
     res.status(201).json(technologies);
   } catch (error: any) {
@@ -57,7 +58,7 @@ const getMaterials = async (req: Request, res: Response) => {
   try {
     const [getAll] = await pool.query("SELECT * FROM materials");
 
-    const materials = (getAll as Array<any>).map((item) => item.material);
+    const materials = (getAll as RequestBody[]).map((item) => item.material);
 
     res.status(201).json(materials);
   } catch (error: any) {
@@ -70,7 +71,7 @@ const getSurfaceFinishes = async (req: Request, res: Response) => {
   try {
     const [getAll] = await pool.query("SELECT * FROM surface_finishes");
 
-    const finishes = (getAll as Array<any>).map((item) => item.surface_finish);
+    const finishes = (getAll as RequestBody[]).map((item) => item.surface_finish);
 
     res.status(201).json(finishes);
   } catch (error: any) {
