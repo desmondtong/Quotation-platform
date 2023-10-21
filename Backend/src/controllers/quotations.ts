@@ -150,95 +150,88 @@ const deleteQuotation = async (req: Request, res: Response) => {
   }
 };
 
-const updateProject = async (req: Request, res: Response) => {
+const updateQuotation = async (req: Request, res: Response) => {
   try {
-    const { project_name, is_active, items }: RequestBody = req.body;
+    const { status, qt_items }: RequestBody = req.body;
 
     try {
-      // start transaction to update project and items
+      // start transaction to update quotation and qt_items
       await pool.query("START TRANSACTION");
 
-      // update project
-      if ("project_name" in req.body) {
+      // update quotation
+      if ("status" in req.body) {
         await pool.query(
-          `UPDATE projects SET project_name = ?
-              WHERE project_id = ?
+          `UPDATE quotations SET status = ?
+              WHERE quotation_id = ?
               `,
-          [project_name, req.params.project_id]
+          [status, req.params.quotation_id]
         );
       }
 
-      if ("is_active" in req.body) {
-        await pool.query(
-          `UPDATE projects SET is_active = ?
-              WHERE project_id = ?
-              `,
-          [is_active, req.params.project_id]
-        );
-      }
-
-      // update items
-      if ("items" in req.body)
-        for (const item of items!) {
+      // update qt_items
+      if ("qt_items" in req.body)
+        for (const item of qt_items!) {
           if ("technology" in item) {
             await pool.query(
-              `UPDATE items SET technology = ?
+              `UPDATE qt_items SET technology = ?
                   WHERE qt_item_id = ?
                   `,
-              [item.technology, item.item_id]
+              [item.technology, item.qt_item_id]
             );
           }
           if ("material" in item) {
             await pool.query(
-              `UPDATE items SET material = ?
-                  WHERE item_id = ?
+              `UPDATE qt_items SET material = ?
+                  WHERE qt_item_id = ?
                   `,
-              [item.material, item.item_id]
+              [item.material, item.qt_item_id]
             );
           }
           if ("surface_finish" in item) {
             await pool.query(
-              `UPDATE items SET surface_finish = ?
-                  WHERE item_id = ?
+              `UPDATE qt_items SET surface_finish = ?
+                  WHERE qt_item_id = ?
                   `,
-              [item.surface_finish, item.item_id]
+              [item.surface_finish, item.qt_item_id]
             );
           }
           if ("item_name" in item) {
             await pool.query(
-              `UPDATE items SET item_name = ?
-                  WHERE item_id = ?
+              `UPDATE qt_items SET item_name = ?
+                  WHERE qt_item_id = ?
                   `,
-              [item.item_name, item.item_id]
+              [item.item_name, item.qt_item_id]
             );
           }
           if ("quantity" in item) {
             await pool.query(
-              `UPDATE items SET quantity = ?
-                  WHERE item_id = ?
+              `UPDATE qt_items SET quantity = ?
+                  WHERE qt_item_id = ?
                   `,
-              [item.quantity, item.item_id]
+              [item.quantity, item.qt_item_id]
             );
+            // "price" column will auto update in qt_items table
           }
-          if ("status" in item) {
+          if ("unit_price" in item) {
             await pool.query(
-              `UPDATE items SET status = ?
-                  WHERE item_id = ?
-                  `,
-              [item.status, item.item_id]
+              `UPDATE qt_items SET unit_price = ?
+                WHERE qt_item_id = ?
+                `,
+              [item.unit_price, item.qt_item_id]
             );
+            // "price" column will auto update in qt_items table
           }
         }
 
       await pool.query("COMMIT");
-      res.status(201).json({ status: "ok", msg: "Project updated" });
+      res.status(201).json({ status: "ok", msg: "Quotation updated" });
     } catch (error: any) {
       await pool.query("ROLLBACK");
 
       console.error(error.message);
       res.status(500).json({
         status: "error",
-        error: "Rollback: Error in updating project",
+        error: "Rollback: Error in updating quotation",
       });
     }
   } catch (error: any) {
@@ -249,37 +242,51 @@ const updateProject = async (req: Request, res: Response) => {
 
 const deleteQtItem = async (req: Request, res: Response) => {
   try {
-    // delete qt_item by update is_deleted
-    await pool.query(
-      `UPDATE qt_items SET is_deleted =1 
-            WHERE qt_item_id = ?`,
-      [req.params.qt_item_id]
-    );
+    try {
+      await pool.query("START TRANSACTION");
 
-    // get quotation_id of the deleted qt_item
-    const [id] = await pool.query(
-      "SELECT quotation_id FROM qt_items WHERE qt_item_id = ?",
-      [req.params.qt_item_id]
-    );
-    const quotation_id = (id as RequestBody[])[0]["quotation_id"];
+      // delete qt_item by update is_deleted
+      await pool.query(
+        `UPDATE qt_items SET is_deleted =1 
+              WHERE qt_item_id = ?`,
+        [req.params.qt_item_id]
+      );
 
-    // re-calculate total price of quotation and update
-    const [sum] = await pool.query(
-      `SELECT SUM(price) FROM qt_items qt
-            JOIN quotations q ON q.quotation_id = qt.quotation_id
-            WHERE qt.is_deleted = 0 AND q.quotation_id = ?`,
-      [quotation_id]
-    );
+      // get quotation_id of the deleted qt_item
+      const [id] = await pool.query(
+        "SELECT quotation_id FROM qt_items WHERE qt_item_id = ?",
+        [req.params.qt_item_id]
+      );
+      const quotation_id = (id as RequestBody[])[0]["quotation_id"];
 
-    const total_price = (sum as RequestBody[])[0]["SUM(price)"];
+      // re-calculate total price of quotation and update
+      const [sum] = await pool.query(
+        `SELECT SUM(price) FROM qt_items qt
+              JOIN quotations q ON q.quotation_id = qt.quotation_id
+              WHERE qt.is_deleted = 0 AND q.quotation_id = ?`,
+        [quotation_id]
+      );
 
-    await pool.query(
-      `UPDATE quotations SET total_price = ?
-            WHERE quotation_id = ?`,
-      [total_price, quotation_id]
-    );
+      const total_price = (sum as RequestBody[])[0]["SUM(price)"];
 
-    res.status(201).json({ status: "ok", msg: "Item deleted" });
+      await pool.query(
+        `UPDATE quotations SET total_price = ?
+              WHERE quotation_id = ?`,
+        [total_price, quotation_id]
+      );
+
+      res.status(201).json({ status: "ok", msg: "Item deleted" });
+
+      await pool.query("COMMIT");
+    } catch (error: any) {
+      await pool.query("ROLLBACK");
+
+      console.error(error.message);
+      res.status(500).json({
+        status: "error",
+        error: "Rollback: Error in deleting quoted item",
+      });
+    }
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });
@@ -291,5 +298,6 @@ export {
   getAllSupplierQuotations,
   getQuotationsByProjectId,
   deleteQuotation,
+  updateQuotation,
   deleteQtItem,
 };

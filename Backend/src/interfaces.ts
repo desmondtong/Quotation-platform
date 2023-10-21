@@ -31,10 +31,11 @@ export interface RequestBody {
   quotation_id?: number;
   supplier_id?: number;
 
+  qt_items?: RequestBody[];
+
   // qt_items
+  qt_item_id?: number;
   unit_price?: number;
 
   "SUM(price)"?: number;
-
-  qt_items?: RequestBody[];
 }

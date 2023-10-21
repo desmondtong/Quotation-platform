@@ -76,7 +76,7 @@ const getAllCustomerProjects = async (req: Request, res: Response) => {
 const getAllProjects = async (req: Request, res: Response) => {
   try {
     const [project] = await pool.query(
-      "SELECT * FROM projects WHERE is_active = true"
+      "SELECT * FROM projects WHERE is_active = 1"
     );
 
     for (const item of project as RequestBody[]) {
