@@ -9,10 +9,9 @@ import bodyParser from "body-parser";
 
 dotenv.config();
 
-// import auth from "./src/routers/auth";
+import auth from "./src/routers/auth";
 // import items from "./src/routers/items";
 // import carts from "./src/routers/carts";
-// import orders from "./src/routers/orders";
 import constraint from "./src/routers/constraint";
 
 //allows api to be called 100 times within 15min interval
@@ -37,9 +36,9 @@ app.use(
   })
 );
 
-// app.use("/auth", auth);
-// app.use("/api", items);
-// app.use("/api", carts);
+app.use("/auth", auth);
+// app.use("/api", projects);
+// app.use("/api", quotations);
 // app.use("/api", orders);
 app.use("/api", constraint);
 
