@@ -6,8 +6,8 @@ const createProject = async (req: Request, res: Response) => {
   try {
     const { customer_id, project_name, items }: RequestBody = req.body;
 
-    // transaction to create new project + items
     try {
+      // transaction to create new project + items
       await pool.query("START TRANSACTION");
 
       // create new project and get new project_id
@@ -153,10 +153,108 @@ const deleteProject = async (req: Request, res: Response) => {
   }
 };
 
+const updateProject = async (req: Request, res: Response) => {
+  try {
+    const { project_name, is_active, items }: RequestBody = req.body;
+
+    try {
+      // start transaction to update project and items
+      await pool.query("START TRANSACTION");
+
+      // update project
+      if ("project_name" in req.body) {
+        await pool.query(
+          `UPDATE projects SET project_name = ?
+              WHERE project_id = ?
+              `,
+          [project_name, req.params.project_id]
+        );
+      }
+
+      if ("is_active" in req.body) {
+        await pool.query(
+          `UPDATE projects SET is_active = ?
+              WHERE project_id = ?
+              `,
+          [is_active, req.params.project_id]
+        );
+      }
+
+      // update items
+      if ("items" in req.body)
+        for (const item of items!) {
+          if ("technology" in item) {
+            await pool.query(
+              `UPDATE items SET technology = ?
+                  WHERE item_id = ?
+                  `,
+              [item.technology, item.item_id]
+            );
+          }
+          if ("material" in item) {
+            await pool.query(
+              `UPDATE items SET material = ?
+                  WHERE item_id = ?
+                  `,
+              [item.material, item.item_id]
+            );
+          }
+          if ("surface_finish" in item) {
+            await pool.query(
+              `UPDATE items SET surface_finish = ?
+                  WHERE item_id = ?
+                  `,
+              [item.surface_finish, item.item_id]
+            );
+          }
+          if ("item_name" in item) {
+            await pool.query(
+              `UPDATE items SET item_name = ?
+                  WHERE item_id = ?
+                  `,
+              [item.item_name, item.item_id]
+            );
+          }
+          if ("quantity" in item) {
+            await pool.query(
+              `UPDATE items SET quantity = ?
+                  WHERE item_id = ?
+                  `,
+              [item.quantity, item.item_id]
+            );
+          }
+          if ("status" in item) {
+            await pool.query(
+              `UPDATE items SET status = ?
+                  WHERE item_id = ?
+                  `,
+              [item.status, item.item_id]
+            );
+          }
+        }
+
+      await pool.query("COMMIT");
+      res.status(201).json({ status: "ok", msg: "Project updated" });
+    } catch (error: any) {
+      await pool.query("ROLLBACK");
+
+      console.error(error.message);
+      res.status(500).json({
+        status: "error",
+        error: "Rollback: Error in updating project",
+      });
+    }
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
 export {
   createProject,
   getAllCustomerProjects,
   getAllProjects,
   getProjectById,
   deleteProject,
+  updateProject,
 };

@@ -12,12 +12,17 @@ export interface RequestBody {
   project_id?: number;
   customer_id?: number;
   project_name?: string;
+  is_active?: string;
+
   items?: RequestBody[];
 
+  // items
+  item_id?: number;
   technology?: string;
   material?: string;
   surface_finish?: string;
   item_name?: string;
+  status?: string;
   quantity?: number;
 
   "LAST_INSERT_ID()"?: number;
