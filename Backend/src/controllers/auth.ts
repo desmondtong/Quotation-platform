@@ -15,7 +15,7 @@ const register = async (req: Request, res: Response) => {
       email,
     ]);
 
-    if ((auth as Array<any>).length) {
+    if ((auth as RequestBody[]).length) {
       return res.status(400).json({ msg: "Duplicate email" });
     }
 
@@ -42,7 +42,7 @@ const login = async (req: Request, res: Response) => {
       email,
     ]);
 
-    if (!(auth as Array<any>).length) {
+    if (!(auth as RequestBody[]).length) {
       return res.status(400).json({
         status: "error",
         msg: "You do not have an account. Please register",
@@ -50,8 +50,8 @@ const login = async (req: Request, res: Response) => {
     }
 
     // decrypt and compare password
-    const data = (auth as Array<any>)[0];
-    const result = await bcrypt.compare(password!, data.password);
+    const data = (auth as RequestBody[])[0];
+    const result = await bcrypt.compare(password!, data.password!);
 
     if (!result) {
       console.log("email or password error");
@@ -84,4 +84,18 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-export { register, login };
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const [userAcc] = await pool.query(
+      "SELECT * FROM users WHERE user_id = ?",
+      [req.params.id]
+    );
+
+    res.json((userAcc as RequestBody[])[0]);
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(400).json({ status: "error", msg: "Get user failed" });
+  }
+};
+
+export { register, login, getUserById };

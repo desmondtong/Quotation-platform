@@ -12,11 +12,11 @@ const router = express.Router();
 // } from "../validators/auth";
 // import { auth, authVendor } from "../middleware/auth";
 // import { validation as checkValid } from "../middleware/checkValid";
-import { register, login } from "../controllers/auth";
+import { register, login, getUserById } from "../controllers/auth";
 
 // router.get("/accounts", auth, getAllAccount);
 // router.get("/accounts/vendor", getAllVendor);
-// router.get("/accounts/:id", validateIdInParam, checkValid, getAccountById);
+router.get("/accounts/:id", getUserById);
 
 router.put("/register", register);
 router.put("/login", login);

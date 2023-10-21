@@ -3,7 +3,7 @@ export interface RequestBody {
   name?: string;
   company?: string;
   email?: string;
-  password?: string | Buffer;
+  password?: string;
   phone_number?: number;
   role?: string;
 }
