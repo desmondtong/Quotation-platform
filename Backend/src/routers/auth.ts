@@ -12,14 +12,14 @@ const router = express.Router();
 // } from "../validators/auth";
 // import { auth, authVendor } from "../middleware/auth";
 // import { validation as checkValid } from "../middleware/checkValid";
-import { register } from "../controllers/auth";
+import { register, login } from "../controllers/auth";
 
 // router.get("/accounts", auth, getAllAccount);
 // router.get("/accounts/vendor", getAllVendor);
 // router.get("/accounts/:id", validateIdInParam, checkValid, getAccountById);
 
 router.put("/register", register);
-// router.post("/login", validateLoginData, checkValid, login);
+router.put("/login", login);
 // router.post("/refresh", validateRefreshToken, checkValid, refresh);
 
 // router.patch(
