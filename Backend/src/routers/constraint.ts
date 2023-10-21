@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 
+import { auth } from "../middleware/auth";
 import {
   getRoles,
   getItemStatuses,
@@ -10,13 +11,13 @@ import {
   getSurfaceFinishes,
 } from "../controllers/constraint";
 
-router.get("/constraints/roles", getRoles);
+router.get("/constraints/roles", auth, getRoles);
 
-router.get("/constraints/item-statuses", getItemStatuses);
-router.get("/constraints/qt-statuses", getQtStatuses);
+router.get("/constraints/item-statuses", auth, getItemStatuses);
+router.get("/constraints/qt-statuses", auth, getQtStatuses);
 
-router.get("/constraints/technologies", getTechnologies);
-router.get("/constraints/materials", getMaterials);
-router.get("/constraints/surface-finishes", getSurfaceFinishes);
+router.get("/constraints/technologies", auth, getTechnologies);
+router.get("/constraints/materials", auth, getMaterials);
+router.get("/constraints/surface-finishes", auth, getSurfaceFinishes);
 
 export default router;
