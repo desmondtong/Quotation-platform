@@ -40,12 +40,10 @@ const createProject = async (req: Request, res: Response) => {
       await pool.query("ROLLBACK");
 
       console.error(error.message);
-      res
-        .status(500)
-        .json({
-          status: "error",
-          error: "Rollback: Error in creating project",
-        });
+      res.status(500).json({
+        status: "error",
+        error: "Rollback: Error in creating project",
+      });
     }
   } catch (error: any) {
     console.log(error.message);
@@ -56,7 +54,7 @@ const createProject = async (req: Request, res: Response) => {
 const getAllCustomerProjects = async (req: Request, res: Response) => {
   try {
     const [project] = await pool.query(
-      "SELECT * FROM projects WHERE customer_id = ?",
+      "SELECT * FROM projects WHERE customer_id = ? AND is_deleted = 0",
       [req.params.customer_id]
     );
 
@@ -75,4 +73,26 @@ const getAllCustomerProjects = async (req: Request, res: Response) => {
   }
 };
 
-export { createProject, getAllCustomerProjects };
+const getAllProjects = async (req: Request, res: Response) => {
+  try {
+    const [project] = await pool.query(
+      "SELECT * FROM projects WHERE is_active = true",
+      [req.params.customer_id]
+    );
+
+    for (const item of project as RequestBody[]) {
+      const [items] = await pool.query(
+        "SELECT * FROM items WHERE project_id = ?",
+        [item.project_id]
+      );
+      item["items"] = items as RequestBody[];
+    }
+
+    res.status(201).json({ status: "ok", msg: project });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
+export { createProject, getAllCustomerProjects, getAllProjects };
