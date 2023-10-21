@@ -115,9 +115,48 @@ const getProjectById = async (req: Request, res: Response) => {
   }
 };
 
+const deleteProject = async (req: Request, res: Response) => {
+  try {
+    try {
+      // start transaction to delete project and items
+      await pool.query("START TRANSACTION");
+
+      // delete project by update is_deleted and is_active
+      await pool.query(
+        `UPDATE projects SET is_deleted = 1, is_active = 0
+        WHERE project_id = ?
+        `,
+        [req.params.project_id]
+      );
+
+      // delete items by update is_deleted
+      await pool.query(
+        `UPDATE items SET is_deleted =1 
+        WHERE project_id = ?`,
+        [req.params.project_id]
+      );
+
+      await pool.query("COMMIT");
+      res.status(201).json({ status: "ok", msg: "Project deleted" });
+    } catch (error: any) {
+      await pool.query("ROLLBACK");
+
+      console.error(error.message);
+      res.status(500).json({
+        status: "error",
+        error: "Rollback: Error in deleting project",
+      });
+    }
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
 export {
   createProject,
   getAllCustomerProjects,
   getAllProjects,
   getProjectById,
+  deleteProject,
 };
