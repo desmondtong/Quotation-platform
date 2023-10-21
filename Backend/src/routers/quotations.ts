@@ -1,10 +1,13 @@
 import express from "express";
 const router = express.Router();
 
-import { createQuotation } from "../controllers/quotations";
+import {
+  createQuotation,
+  getAllSupplierQuotations,
+} from "../controllers/quotations";
 
 router.put("/quotations-items", createQuotation);
-// router.get("/quotations-items/:customer_id", getAllCustomerquotations);
+router.get("/quotations-items/:supplier_id", getAllSupplierQuotations);
 // router.get("/quotations-items", getAllquotations);
 // router.post("/quotations-items/:project_id", getProjectById);
 // router.delete("/quotations-items/:project_id", deleteProject);

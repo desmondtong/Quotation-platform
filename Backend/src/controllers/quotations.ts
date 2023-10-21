@@ -68,22 +68,22 @@ const createQuotation = async (req: Request, res: Response) => {
   }
 };
 
-const getAllCustomerProjects = async (req: Request, res: Response) => {
+const getAllSupplierQuotations = async (req: Request, res: Response) => {
   try {
-    const [project] = await pool.query(
-      "SELECT * FROM projects WHERE customer_id = ? AND is_deleted = 0",
-      [req.params.customer_id]
+    const [quotation] = await pool.query(
+      "SELECT * FROM quotations WHERE supplier_id = ? AND is_deleted = 0",
+      [req.params.supplier_id]
     );
 
-    for (const item of project as RequestBody[]) {
+    for (const item of quotation as RequestBody[]) {
       const [items] = await pool.query(
-        "SELECT * FROM items WHERE project_id = ?",
-        [item.project_id]
+        "SELECT * FROM qt_items WHERE quotation_id = ?",
+        [item.quotation_id]
       );
-      item["items"] = items as RequestBody[];
+      item["qt_items"] = items as RequestBody[];
     }
 
-    res.status(201).json({ status: "ok", msg: project });
+    res.status(201).json({ status: "ok", msg: quotation });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });
@@ -285,10 +285,5 @@ const deleteItem = async (req: Request, res: Response) => {
 
 export {
   createQuotation,
-  getAllCustomerProjects,
-  getAllProjects,
-  getProjectById,
-  deleteProject,
-  updateProject,
-  deleteItem,
+  getAllSupplierQuotations
 };

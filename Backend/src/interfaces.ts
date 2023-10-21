@@ -28,6 +28,7 @@ export interface RequestBody {
   "LAST_INSERT_ID()"?: number;
 
   // quotations
+  quotation_id?: number;
   supplier_id?: number;
 
   // qt_items
