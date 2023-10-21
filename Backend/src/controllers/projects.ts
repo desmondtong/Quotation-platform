@@ -60,7 +60,7 @@ const getAllCustomerProjects = async (req: Request, res: Response) => {
 
     for (const item of project as RequestBody[]) {
       const [items] = await pool.query(
-        "SELECT * FROM items WHERE project_id = ?",
+        "SELECT * FROM items WHERE project_id = ? AND is_deleted = 0",
         [item.project_id]
       );
       item["items"] = items as RequestBody[];
@@ -81,7 +81,7 @@ const getAllProjects = async (req: Request, res: Response) => {
 
     for (const item of project as RequestBody[]) {
       const [items] = await pool.query(
-        "SELECT * FROM items WHERE project_id = ?",
+        "SELECT * FROM items WHERE project_id = ? AND is_deleted = 0",
         [item.project_id]
       );
       item["items"] = items as RequestBody[];
@@ -103,7 +103,7 @@ const getProjectById = async (req: Request, res: Response) => {
     const projectData = (project as RequestBody[])[0];
 
     const [items] = await pool.query(
-      "SELECT * FROM items WHERE project_id = ?",
+      "SELECT * FROM items WHERE project_id = ? AND is_deleted = 0",
       [projectData.project_id]
     );
     projectData["items"] = items as RequestBody[];

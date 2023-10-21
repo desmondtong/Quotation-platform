@@ -77,7 +77,7 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
 
     for (const item of quotation as RequestBody[]) {
       const [items] = await pool.query(
-        "SELECT * FROM qt_items WHERE quotation_id = ?",
+        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0",
         [item.quotation_id]
       );
       item["qt_items"] = items as RequestBody[];
@@ -90,60 +90,40 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
   }
 };
 
-const getAllProjects = async (req: Request, res: Response) => {
+const getQuotationsByProjectId = async (req: Request, res: Response) => {
   try {
-    const [project] = await pool.query(
-      "SELECT * FROM projects WHERE is_active = true"
-    );
-
-    for (const item of project as RequestBody[]) {
-      const [items] = await pool.query(
-        "SELECT * FROM items WHERE project_id = ?",
-        [item.project_id]
-      );
-      item["items"] = items as RequestBody[];
-    }
-
-    res.status(201).json({ status: "ok", msg: project });
-  } catch (error: any) {
-    console.log(error.message);
-    res.json({ status: "error", msg: "Server error" });
-  }
-};
-
-const getProjectById = async (req: Request, res: Response) => {
-  try {
-    const [project] = await pool.query(
-      "SELECT * FROM projects WHERE project_id = ?",
+    const [quotation] = await pool.query(
+      "SELECT * FROM quotations WHERE project_id = ? AND is_deleted = 0",
       [req.params.project_id]
     );
-    const projectData = (project as RequestBody[])[0];
 
-    const [items] = await pool.query(
-      "SELECT * FROM items WHERE project_id = ?",
-      [projectData.project_id]
-    );
-    projectData["items"] = items as RequestBody[];
+    for (const item of quotation as RequestBody[]) {
+      const [items] = await pool.query(
+        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0 AND status = DECLINED",
+        [item.quotation_id]
+      );
+      item["qt_items"] = items as RequestBody[];
+    }
 
-    res.status(201).json({ status: "ok", msg: projectData });
+    res.status(201).json({ status: "ok", msg: quotation });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });
   }
 };
 
-const deleteProject = async (req: Request, res: Response) => {
+const deleteQuotation = async (req: Request, res: Response) => {
   try {
     try {
-      // start transaction to delete project and items
+      // start transaction to delete quotation and qt_items
       await pool.query("START TRANSACTION");
 
-      // delete project by update is_deleted and is_active
+      // delete quotation by update is_deleted
       await pool.query(
-        `UPDATE projects SET is_deleted = 1, is_active = 0
-        WHERE project_id = ?
+        `UPDATE quotations SET is_deleted = 1
+        WHERE quotation_id = ?
         `,
-        [req.params.project_id]
+        [req.params.quotation_id]
       );
 
       // delete items by update is_deleted
@@ -283,7 +263,4 @@ const deleteItem = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  createQuotation,
-  getAllSupplierQuotations
-};
+export { createQuotation, getAllSupplierQuotations, getQuotationsByProjectId };
