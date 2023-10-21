@@ -35,12 +35,17 @@ const createProject = async (req: Request, res: Response) => {
       }
 
       await pool.query("COMMIT");
-      res.status(201).json({ msg: "Project created" });
+      res.status(201).json({ status: "ok", msg: "Project created" });
     } catch (error: any) {
       await pool.query("ROLLBACK");
 
       console.error(error.message);
-      res.status(500).json({ error: "Rollback: Error in creating project" });
+      res
+        .status(500)
+        .json({
+          status: "error",
+          error: "Rollback: Error in creating project",
+        });
     }
   } catch (error: any) {
     console.log(error.message);
