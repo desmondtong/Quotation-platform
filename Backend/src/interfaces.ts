@@ -26,4 +26,14 @@ export interface RequestBody {
   quantity?: number;
 
   "LAST_INSERT_ID()"?: number;
+
+  // quotations
+  supplier_id?: number;
+
+  // qt_items
+  unit_price?: number;
+
+  "SUM(price)"?: number;
+
+  qt_items?: RequestBody[];
 }

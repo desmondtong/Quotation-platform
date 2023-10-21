@@ -11,7 +11,7 @@ dotenv.config();
 
 import auth from "./src/routers/auth";
 import projects from "./src/routers/projects";
-// import carts from "./src/routers/carts";
+import quotations from "./src/routers/quotations";
 import constraint from "./src/routers/constraint";
 
 //allows api to be called 100 times within 15min interval
@@ -38,8 +38,7 @@ app.use(
 
 app.use("/auth", auth);
 app.use("/api", projects);
-// app.use("/api", quotations);
-// app.use("/api", orders);
+app.use("/api", quotations);
 app.use("/api", constraint);
 
 const PORT = process.env.PORT || 5001;
