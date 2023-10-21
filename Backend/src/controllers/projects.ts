@@ -233,6 +233,25 @@ const updateProject = async (req: Request, res: Response) => {
           }
         }
 
+      // if all items' status are QUOTE ACCEPTED or COMPLETED, set project as inactive
+      const [item_status] = await pool.query(
+        `
+        SELECT COUNT(STATUS) FROM items 
+        WHERE project_id = ? AND (status = ? OR status = ?)
+        `,
+        [req.params.project_id, "NO OFFER", "OFFERED"]
+      );
+
+      if ((item_status as RequestBody[])[0]["COUNT(STATUS)"] == 0)
+        console.log("set is_active = 0");
+      await pool.query(
+        `
+          UPDATE projects SET is_active = 0
+          WHERE project_id = ?
+          `,
+        [req.params.project_id]
+      );
+
       await pool.query("COMMIT");
       res.status(201).json({ status: "ok", msg: "Project updated" });
     } catch (error: any) {

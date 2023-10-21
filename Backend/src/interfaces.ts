@@ -26,6 +26,7 @@ export interface RequestBody {
   quantity?: number;
 
   "LAST_INSERT_ID()"?: number;
+  "COUNT(STATUS)"?: number;
 
   // quotations
   quotation_id?: number;
