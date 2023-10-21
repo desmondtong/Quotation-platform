@@ -16,7 +16,7 @@ import { register, login, getUserById } from "../controllers/auth";
 
 // router.get("/accounts", auth, getAllAccount);
 // router.get("/accounts/vendor", getAllVendor);
-router.get("/accounts/:id", getUserById);
+router.get("/accounts/:user_id", getUserById);
 
 router.put("/register", register);
 router.put("/login", login);

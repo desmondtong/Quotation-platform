@@ -88,7 +88,7 @@ const getUserById = async (req: Request, res: Response) => {
   try {
     const [userAcc] = await pool.query(
       "SELECT * FROM users WHERE user_id = ?",
-      [req.params.id]
+      [req.params.user_id]
     );
 
     res.json((userAcc as RequestBody[])[0]);

@@ -10,7 +10,7 @@ import bodyParser from "body-parser";
 dotenv.config();
 
 import auth from "./src/routers/auth";
-// import items from "./src/routers/items";
+import projects from "./src/routers/projects";
 // import carts from "./src/routers/carts";
 import constraint from "./src/routers/constraint";
 
@@ -37,7 +37,7 @@ app.use(
 );
 
 app.use("/auth", auth);
-// app.use("/api", projects);
+app.use("/api", projects);
 // app.use("/api", quotations);
 // app.use("/api", orders);
 app.use("/api", constraint);
