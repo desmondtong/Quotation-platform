@@ -1,7 +1,12 @@
 import React from "react";
+import NavBar from "../components/NavBar";
 
 const Quotation: React.FC = () => {
-  return <>Quotation</>;
+  return (
+    <>
+      <NavBar></NavBar>
+    </>
+  );
 };
 
 export default Quotation;

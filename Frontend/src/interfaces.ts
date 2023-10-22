@@ -1,3 +1,5 @@
+import { To } from "react-router-dom";
+
 export interface UserContextType {
   accessToken: string;
   setAccessToken: React.Dispatch<React.SetStateAction<string>>;
@@ -30,10 +32,15 @@ export interface returnValue {
 }
 
 export interface Claims {
-  user_id: number;
-  email: string;
-  name: string;
-  company: string;
-  role: string;
-  phone_number: number;
+  user_id?: number;
+  email?: string;
+  name?: string;
+  company?: string;
+  role?: string;
+  phone_number?: number;
+}
+
+export interface navBarType {
+  item: string;
+  link: To;
 }

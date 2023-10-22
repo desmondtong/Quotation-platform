@@ -30,6 +30,7 @@ function App() {
             element={<Registration />}
           ></Route>
 
+          {/* allow access only after login */}
           {claims != null && (
             <>
               <Route path={appPaths.project} element={<Project />}></Route>
