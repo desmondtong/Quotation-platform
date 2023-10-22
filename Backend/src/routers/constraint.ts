@@ -11,7 +11,7 @@ import {
   getSurfaceFinishes,
 } from "../controllers/constraint";
 
-router.get("/constraints/roles", auth, getRoles);
+router.get("/constraints/roles", getRoles);
 
 router.get("/constraints/item-statuses", auth, getItemStatuses);
 router.get("/constraints/qt-statuses", auth, getQtStatuses);
