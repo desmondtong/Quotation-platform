@@ -78,7 +78,7 @@ const Project: React.FC = () => {
             variant="h5"
             gutterBottom
           >{`Welcome back, ${userCtx?.claims.name}!`}</Typography>
-          
+
           {userCtx?.claims.role == "CUSTOMER" && (
             <Stack direction="row" justifyContent="flex-end">
               <Button variant="contained">+ New Project</Button>
@@ -131,7 +131,7 @@ const Project: React.FC = () => {
 
                     <TableCell align="center">
                       <Stack direction="column">
-                        <Typography variant="body2" color="var(--orange)">
+                        <Typography variant="body2" color="var(--darkblue)">
                           #{row.project_id}
                         </Typography>
                         <Typography variant="body2" fontWeight="light">

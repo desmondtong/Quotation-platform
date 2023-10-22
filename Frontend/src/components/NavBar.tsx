@@ -67,7 +67,9 @@ const NavBar: React.FC = () => {
       className="nav-bar"
     >
       <Grid component="main">
-        <Typography m="2rem" variant="h4">Platform Name</Typography>
+        <Typography m="2rem" variant="h4" color="var(--darkblue)">
+          Platform Name
+        </Typography>
       </Grid>
 
       <List sx={{ flexGrow: 1 }}>
@@ -89,13 +91,13 @@ const NavBar: React.FC = () => {
                     horizontal: "right",
                   }}
                 > */}
-                {/* <ListItemIcon sx={{ color: "var(--orange)" }}>
+                {/* <ListItemIcon sx={{ color: "var(--darkblue)" }}>
                   {item.icon}
                 </ListItemIcon> */}
                 {/* </StyledBadge> */}
                 <ListItemText
                   primary={item.item}
-                  sx={{ color: "var(--orange)" }}
+                  sx={{ color: "var(--darkblue)" }}
                 />
               </ListItemButton>
             </ListItem>
@@ -107,9 +109,12 @@ const NavBar: React.FC = () => {
         <ListItem key={"Logout"} onClick={handleLogout}>
           <ListItemButton>
             <ListItemIcon>
-              <LogoutIcon sx={{ color: "var(--orange)" }} />
+              <LogoutIcon sx={{ color: "var(--darkblue)" }} />
             </ListItemIcon>
-            <ListItemText primary={"Logout"} sx={{ color: "var(--orange)" }} />
+            <ListItemText
+              primary={"Logout"}
+              sx={{ color: "var(--darkblue)" }}
+            />
           </ListItemButton>
         </ListItem>
       </List>
