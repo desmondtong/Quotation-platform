@@ -137,7 +137,8 @@ const Project: React.FC = () => {
 
                     <TableCell align="center">
                       <Typography variant="body2" fontWeight="light">
-                        {new Date(row.datetime!).toDateString().slice(4)}{", "}
+                        {new Date(row.datetime!).toDateString().slice(4)}
+                        {", "}
                         {new Date(row.datetime!).toTimeString().slice(0, 5)}
                       </Typography>
                     </TableCell>

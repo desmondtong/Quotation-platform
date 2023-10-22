@@ -12,17 +12,19 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, data } from "../interfaces";
 import QuotationList from "../components/QuotationList";
+import { appPaths } from "../appPath";
 
 const ProjectDetail: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const params = useParams();
+  const navigate = useNavigate();
 
   const [projectDetails, setProjectDetails] = useState<FetchedData>({});
   const [openQtList, setOpenQtList] = useState<boolean>(false);
@@ -39,6 +41,7 @@ const ProjectDetail: React.FC = () => {
       setItemId(item_id);
     }
   };
+
   // endpoint
   const getProjectDetails = async () => {
     const res: data = await fetchData(
@@ -50,6 +53,22 @@ const ProjectDetail: React.FC = () => {
 
     if (res.ok) {
       setProjectDetails(res.data.msg);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const deleteProject = async () => {
+    const res: data = await fetchData(
+      "/api/projects-items/" + params.projectId,
+      "DELETE",
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      getProjectDetails();
+      navigate(appPaths.project);
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -237,7 +256,7 @@ const ProjectDetail: React.FC = () => {
               mt="1rem"
             >
               <Button variant="contained">Update Project</Button>
-              <Button variant="outlined" color="error">
+              <Button variant="outlined" color="error" onClick={deleteProject}>
                 Delete Project
               </Button>
             </Stack>

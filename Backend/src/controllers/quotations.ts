@@ -102,7 +102,6 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
 
 const getQuotationsByItemId = async (req: Request, res: Response) => {
   try {
-    console.log("here");
     const { item_id }: RequestBody = req.body;
 
     const [quotation] = await pool.query(
@@ -190,7 +189,7 @@ const getQuotationsByQuotationId = async (req: Request, res: Response) => {
     res.status(201).json({ status: "ok", msg: quotationData });
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Server error" });
+    res.json({ status: "error", msg: "Server error. Project or item might have been removed by the client!" });
   }
 };
 

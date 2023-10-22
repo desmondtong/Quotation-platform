@@ -145,6 +145,13 @@ const deleteProject = async (req: Request, res: Response) => {
         [req.params.project_id]
       );
 
+      // update all related quotation status to DECLINED
+      await pool.query(
+        `UPDATE quotations SET status = ?
+          WHERE project_id = ? AND is_deleted = 0`,
+        ["DECLINED", req.params.project_id]
+      );
+
       await pool.query("COMMIT");
       res.status(201).json({ status: "ok", msg: "Project deleted" });
     } catch (error: any) {
