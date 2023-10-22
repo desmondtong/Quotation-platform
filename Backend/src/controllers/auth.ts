@@ -26,7 +26,25 @@ const register = async (req: Request, res: Response) => {
       [name, company, email, hash, phone_number, role]
     );
 
-    res.status(201).json({ msg: "User created" });
+    const [last_id] = await pool.query("SELECT LAST_INSERT_ID()");
+    const user_id = (last_id as RequestBody[])[0]["LAST_INSERT_ID()"];
+
+    // create claims for direct login after registration
+    const claims: RequestBody = {
+      user_id,
+      email,
+      name,
+      company,
+      role,
+      phone_number,
+    };
+
+    const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {
+      expiresIn: "30d",
+      jwtid: uuidv4(),
+    });
+
+    res.status(201).json({ msg: "User created", access });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });

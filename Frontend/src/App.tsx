@@ -8,6 +8,7 @@ import QuotationDetail from "./pages/QuotationDetail";
 import { appPaths } from "./appPath";
 
 function App() {
+  
   return (
     <div>
       <Routes>

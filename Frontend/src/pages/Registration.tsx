@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-// import jwtDecode from "jwt-decode";
 
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { MenuItem, Paper } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 
 // import UserContext from "../context/user";
@@ -21,23 +20,19 @@ const Registration: React.FC = () => {
   // const userCtx = useContext(UserContext);
 
   const [roles, setRoles] = useState<string[]>([]);
-  const [name, setName] = useState<String>("");
-  const [company, setCompany] = useState<String>("");
-  const [role, setRole] = useState<String>("");
-  const [address, setAddress] = useState<String>("");
-  const [postalCode, setPostalCode] = useState<String>("");
-  const [email, setEmail] = useState<String>("");
-  const [contact, setContact] = useState<String>("");
-  const [password, setPassword] = useState<String>("");
-  const [confirmPassword, setConfirmPassword] = useState<String>("");
+  const [name, setName] = useState<string>("");
+  const [company, setCompany] = useState<string>("");
+  const [role, setRole] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [contact, setContact] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [wrongPassword, setWrongPassword] = useState<boolean>(false);
-
-  const pathName = window.location.pathname;
 
   // endpoint
   const getRoles = async () => {
     const res: data = await fetchData("/api/constraints/roles", "GET");
-    
+
     if (res.ok) {
       setRoles(res.data);
     } else {
@@ -46,88 +41,25 @@ const Registration: React.FC = () => {
   };
 
   const handleRegister = async () => {
-    // if (password != confirmPassword) {
-    //   return setWrongPassword(true);
-    // } else {
-    //   setWrongPassword(false);
-    // }
-    // // construct body for endpoint for different role
-    // const body: registerBody = {
-    //   role: pathName === "/registration/vendor" ? "VENDOR" : "CUSTOMER",
-    //   email,
-    //   password,
-    //   contact,
-    // };
-    // if (pathName === "/registration/vendor") {
-    //   body["category"] = category;
-    //   body["store_name"] = storeName;
-    //   body["address"] = address;
-    //   body["postal_code"] = postalCode;
-    // } else {
-    //   body["first_name"] = firstName;
-    //   body["last_name"] = lastName;
-    // }
-    // const res: data = await fetchData("/auth/register", "PUT", body);
-    // if (res.ok) {
-    //   // Login user after register successful
-    //   const resLogin: data = await fetchData("/auth/login", "POST", {
-    //     email,
-    //     password,
-    //   });
-    //   if (resLogin.ok) {
-    //     const decoded: any = jwtDecode(resLogin.data?.access);
-    //     const role = decoded.role;
-    //     // check if user login using the correct login portal
-    //     userCtx?.setAccessToken(resLogin.data?.access);
-    //     localStorage.setItem(
-    //       "accessToken",
-    //       JSON.stringify(resLogin.data?.access)
-    //     );
-    //     userCtx?.setRefreshToken(resLogin.data?.refresh);
-    //     localStorage.setItem(
-    //       "refreshToken",
-    //       JSON.stringify(resLogin.data?.refresh)
-    //     );
-    //     userCtx?.setUserId(decoded.id);
-    //     localStorage.setItem("userId", JSON.stringify(decoded.id));
-    //     userCtx?.setRole(decoded.role);
-    //     localStorage.setItem("role", JSON.stringify(decoded.role));
-    //     if (role === "CUSTOMER") {
-    //       userCtx?.setCustomerClaims({
-    //         cart_id: decoded.cart_id,
-    //         name: `${decoded.first_name} ${decoded.last_name}`,
-    //       });
-    //       localStorage.setItem(
-    //         "customerClaims",
-    //         JSON.stringify({
-    //           cart_id: decoded.cart_id,
-    //           name: `${decoded.first_name} ${decoded.last_name}`,
-    //         })
-    //       );
-    //     } else if (role === "VENDOR") {
-    //       userCtx?.setVendorClaims({
-    //         address: decoded.address,
-    //         postal_code: decoded.postal_code,
-    //         store_name: decoded.store_name,
-    //         category: decoded.category,
-    //       });
-    //       localStorage.setItem(
-    //         "vendorClaims",
-    //         JSON.stringify({
-    //           address: decoded.address,
-    //           postal_code: decoded.postal_code,
-    //           store_name: decoded.store_name,
-    //           category: decoded.category,
-    //         })
-    //       );
-    //     }
-    //     navigate(`/`);
-    //   } else {
-    //     alert(JSON.stringify(resLogin.data));
-    //   }
-    // } else {
-    //   alert(JSON.stringify(res.data));
-    // }
+    if (password != confirmPassword) {
+      return setWrongPassword(true);
+    } else {
+      setWrongPassword(false);
+    }
+
+    const res: data = await fetchData("/auth/register", "PUT", {
+      name,
+      company,
+      role,
+      email,
+      password,
+      phone_number: contact,
+    });
+
+    if (res.ok) {
+    } else {
+      alert(JSON.stringify(res.data));
+    }
   };
 
   useEffect(() => {

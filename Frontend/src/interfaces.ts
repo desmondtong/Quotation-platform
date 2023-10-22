@@ -1,3 +1,5 @@
+export interface UserContextType {}
+
 export interface useFetchType {
   (
     endpoint: String,
