@@ -23,3 +23,7 @@
   box-sizing: border-box;
   font-family: var(--font) !important;
 }
+
+.pointer {
+  cursor: pointer;
+}

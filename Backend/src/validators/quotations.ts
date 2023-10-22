@@ -2,13 +2,12 @@ import { body, check, param } from "express-validator";
 
 const validateIdInParam = [
   param("supplier_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
-  // param("project_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
   param("quotation_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
   param("qt_item_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
 ];
 
 const validateGetQuotation = [
-  body("project_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
+  body("item_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
   body("customer_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
   body("quotation_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
 ];

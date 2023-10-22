@@ -17,6 +17,7 @@ import NavBar from "../components/NavBar";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, data } from "../interfaces";
+import QuotationList from "../components/QuotationList";
 
 const ProjectDetail: React.FC = () => {
   const fetchData = useFetch();
@@ -24,11 +25,20 @@ const ProjectDetail: React.FC = () => {
   const params = useParams();
 
   const [projectDetails, setProjectDetails] = useState<FetchedData>({});
+  const [openQtList, setOpenQtList] = useState<boolean>(false);
+  const [itemId, setItemId] = useState<number>(0);
 
   const datetime = projectDetails.datetime;
   const date = new Date(datetime!).toDateString().slice(4);
   const time = new Date(datetime!).toTimeString().slice(0, 5);
 
+  // function
+  const handleShowQuotation = (item_id: number) => {
+    if (userCtx?.claims.role == "CUSTOMER") {
+      setOpenQtList(true);
+      setItemId(item_id);
+    }
+  };
   // endpoint
   const getProjectDetails = async () => {
     const res: data = await fetchData(
@@ -154,6 +164,10 @@ const ProjectDetail: React.FC = () => {
                   <TableRow
                     hover={userCtx?.claims.role == "CUSTOMER"}
                     key={idx}
+                    className={
+                      userCtx?.claims.role == "CUSTOMER" ? "pointer" : ""
+                    }
+                    onClick={() => handleShowQuotation(row.item_id!)}
                   >
                     <TableCell align="center">
                       <Typography
@@ -230,6 +244,13 @@ const ProjectDetail: React.FC = () => {
           )}
         </Box>
       </Box>
+
+      <QuotationList
+        openQtList={openQtList}
+        setOpenQtList={setOpenQtList}
+        itemId={itemId}
+        setItemId={setItemId}
+      ></QuotationList>
     </>
   );
 };

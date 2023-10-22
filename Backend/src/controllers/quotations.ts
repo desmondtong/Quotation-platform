@@ -100,22 +100,18 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
   }
 };
 
-const getQuotationsByProjectId = async (req: Request, res: Response) => {
+const getQuotationsByItemId = async (req: Request, res: Response) => {
   try {
-    const { project_id }: RequestBody = req.body;
+    console.log("here");
+    const { item_id }: RequestBody = req.body;
 
     const [quotation] = await pool.query(
-      "SELECT * FROM quotations WHERE project_id = ? AND is_deleted = 0 AND NOT status = ?",
-      [project_id, "DECLINED"]
+      `SELECT qt.*, u.company, q.status FROM qt_items qt
+      JOIN quotations q ON qt.quotation_id = q.quotation_id
+      JOIN users u ON q.supplier_id = u.user_id
+      WHERE item_id = ? AND qt.is_deleted = 0`,
+      [item_id]
     );
-
-    for (const item of quotation as RequestBody[]) {
-      const [items] = await pool.query(
-        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0",
-        [item.quotation_id]
-      );
-      item["qt_items"] = items as RequestBody[];
-    }
 
     res.status(201).json({ status: "ok", msg: quotation });
   } catch (error: any) {
@@ -182,6 +178,7 @@ const getQuotationsByQuotationId = async (req: Request, res: Response) => {
     const [items] = await pool.query(
       `SELECT 
       qt.qt_item_id, qt.quotation_id, qt.technology AS qt_technology, qt.material AS qt_material, qt.surface_finish AS qt_surface_finish, qt.item_name AS qt_item_name, qt.quantity AS qt_quantity, qt.unit_price AS qt_unit_price, qt.price AS qt_price, qt.is_deleted AS qt_is_deleted,
+      
       i.item_id, i.project_id, i.status, i.technology, i.material, i.surface_finish, i.item_name, i.quantity, i.is_deleted
       FROM qt_items qt
       JOIN items i ON qt.item_id = i.item_id  
@@ -381,7 +378,7 @@ const deleteQtItem = async (req: Request, res: Response) => {
 export {
   createQuotation,
   getAllSupplierQuotations,
-  getQuotationsByProjectId,
+  getQuotationsByItemId,
   getQuotationsByCustomerId,
   getQuotationsByQuotationId,
   deleteQuotation,

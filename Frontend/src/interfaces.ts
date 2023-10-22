@@ -70,7 +70,11 @@ export interface FetchedData {
   qt_status?: string;
   qt_items?: any;
 
+  // qt_items
+  price?: string;
+
   // user
+  company?: string;
   customer_company?: string;
   customer_email?: string;
   customer_phone_number?: string;
@@ -79,4 +83,9 @@ export interface FetchedData {
   supplier_phone_number?: string;
 }
 
-export interface Props {}
+export interface Props {
+  openQtList?: boolean;
+  setOpenQtList?: React.Dispatch<React.SetStateAction<boolean>>;
+  itemId?: number;
+  setItemId?: React.Dispatch<React.SetStateAction<number>>;
+}

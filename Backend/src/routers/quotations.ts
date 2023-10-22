@@ -14,7 +14,7 @@ import {
   deleteQtItem,
   deleteQuotation,
   getAllSupplierQuotations,
-  getQuotationsByProjectId,
+  getQuotationsByItemId,
   getQuotationsByCustomerId,
   updateQuotation,
   getQuotationsByQuotationId,
@@ -35,11 +35,11 @@ router.get(
   getAllSupplierQuotations
 );
 router.post(
-  "/quotations-items/project_id",
+  "/quotations-items/item_id",
   authCustomer,
   validateGetQuotation,
   checkValid,
-  getQuotationsByProjectId
+  getQuotationsByItemId
 );
 router.post(
   "/quotations-items/customer_id",
