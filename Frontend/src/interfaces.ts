@@ -63,4 +63,12 @@ export interface FetchedData {
   status?: string;
   item_name?: string;
   quantity?: number;
+
+  // quotations
+  quotation_id?: number;
+  qt_datetime?: string;
+  supplier_company?: string;
+  qt_status?: string;
 }
+
+export interface Props {}

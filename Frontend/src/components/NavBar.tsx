@@ -66,13 +66,13 @@ const NavBar: React.FC = () => {
       anchor="left"
       className="nav-bar"
     >
-      <Grid component="main">
-        <Typography m="2rem" variant="h4" color="var(--darkblue)">
+      <Grid component="main" bgcolor="var(--darkblue)">
+        <Typography m="2rem" variant="h4" color="var(--white)">
           Platform Name
         </Typography>
       </Grid>
 
-      <List sx={{ flexGrow: 1 }}>
+      <List sx={{ flexGrow: 1, bgcolor: "var(--darkblue)" }}>
         {navBar.map((item, idx) => (
           <NavLink to={item.link} style={{ textDecoration: "none" }} key={idx}>
             <ListItem>
@@ -97,7 +97,7 @@ const NavBar: React.FC = () => {
                 {/* </StyledBadge> */}
                 <ListItemText
                   primary={item.item}
-                  sx={{ color: "var(--darkblue)" }}
+                  sx={{ color: "var(--white)" }}
                 />
               </ListItemButton>
             </ListItem>
@@ -105,15 +105,15 @@ const NavBar: React.FC = () => {
         ))}
       </List>
 
-      <List>
+      <List sx={{ bgcolor: "var(--darkblue)" }}>
         <ListItem key={"Logout"} onClick={handleLogout}>
           <ListItemButton>
             <ListItemIcon>
-              <LogoutIcon sx={{ color: "var(--darkblue)" }} />
+              <LogoutIcon sx={{ color: "var(--white)" }} />
             </ListItemIcon>
             <ListItemText
               primary={"Logout"}
-              sx={{ color: "var(--darkblue)" }}
+              sx={{ color: "var(--white)" }}
             />
           </ListItemButton>
         </ListItem>

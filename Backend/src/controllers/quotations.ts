@@ -92,9 +92,45 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
 
 const getQuotationsByProjectId = async (req: Request, res: Response) => {
   try {
+    const { project_id }: RequestBody = req.body;
+
     const [quotation] = await pool.query(
       "SELECT * FROM quotations WHERE project_id = ? AND is_deleted = 0 AND NOT status = ?",
-      [req.params.project_id, "DECLINED"]
+      [project_id, "DECLINED"]
+    );
+
+    for (const item of quotation as RequestBody[]) {
+      const [items] = await pool.query(
+        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0",
+        [item.quotation_id]
+      );
+      item["qt_items"] = items as RequestBody[];
+    }
+
+    res.status(201).json({ status: "ok", msg: quotation });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
+const getQuotationsByCustomerId = async (req: Request, res: Response) => {
+  try {
+    const { customer_id }: RequestBody = req.body;
+
+    const [quotation] = await pool.query(
+      `SELECT 
+      quotation_id, supplier_id, total_price, qt.datetime AS qt_datetime, status AS qt_status,
+      
+      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS suppier_phone_number, 
+
+      project_name, p.project_id, p.datetime AS project_datetime
+      
+      FROM quotations qt
+      JOIN projects p ON p.project_id = qt.project_id
+      JOIN users u ON qt.supplier_id = u.user_id
+      WHERE p.customer_id = ? AND qt.is_deleted = 0 AND p.is_deleted = 0`,
+      [customer_id]
     );
 
     for (const item of quotation as RequestBody[]) {
@@ -297,6 +333,7 @@ export {
   createQuotation,
   getAllSupplierQuotations,
   getQuotationsByProjectId,
+  getQuotationsByCustomerId,
   deleteQuotation,
   updateQuotation,
   deleteQtItem,

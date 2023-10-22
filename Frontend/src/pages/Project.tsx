@@ -18,6 +18,7 @@ import UserContext from "../context/user";
 import { FetchedData, data } from "../interfaces";
 import useFetch from "../hooks/useFetch";
 import { appPaths } from "../appPath";
+import SearchBar from "../components/SearchBar";
 
 const Project: React.FC = () => {
   const navigate = useNavigate();
@@ -76,14 +77,19 @@ const Project: React.FC = () => {
         >
           <Typography
             variant="h5"
-            gutterBottom
+            my="1rem"
           >{`Welcome back, ${userCtx?.claims.name}!`}</Typography>
 
-          {userCtx?.claims.role == "CUSTOMER" && (
-            <Stack direction="row" justifyContent="flex-end">
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <SearchBar></SearchBar>
+            {userCtx?.claims.role == "CUSTOMER" && (
               <Button variant="contained">+ New Project</Button>
-            </Stack>
-          )}
+            )}
+          </Stack>
 
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
             <Table sx={{ minWidth: 650 }}>

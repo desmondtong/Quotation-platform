@@ -6,6 +6,7 @@ import {
   validateIdInParam,
   validateCreateQuotation,
   validateUpdateQuotation,
+  validateGetQuotation,
 } from "../validators/quotations";
 import { validation as checkValid } from "../middleware/checkValid";
 import {
@@ -14,6 +15,7 @@ import {
   deleteQuotation,
   getAllSupplierQuotations,
   getQuotationsByProjectId,
+  getQuotationsByCustomerId,
   updateQuotation,
 } from "../controllers/quotations";
 
@@ -32,11 +34,18 @@ router.get(
   getAllSupplierQuotations
 );
 router.post(
-  "/quotations-items/:project_id",
+  "/quotations-items/project_id",
   authCustomer,
-  validateIdInParam,
+  validateGetQuotation,
   checkValid,
   getQuotationsByProjectId
+);
+router.post(
+  "/quotations-items/customer_id",
+  authCustomer,
+  validateGetQuotation,
+  checkValid,
+  getQuotationsByCustomerId
 );
 router.delete(
   "/quotations-items/:quotation_id",
