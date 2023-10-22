@@ -71,8 +71,10 @@ export interface FetchedData {
   qt_items?: any;
 
   // user
-  supplier_company?: string;
   customer_company?: string;
+  customer_email?: string;
+  customer_phone_number?: string;
+  supplier_company?: string;
   supplier_email?: string;
   supplier_phone_number?: string;
 }

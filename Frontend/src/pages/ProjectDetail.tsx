@@ -56,7 +56,6 @@ const ProjectDetail: React.FC = () => {
           component="main"
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
-          {JSON.stringify(projectDetails)}
           {/* Project details */}
           <Stack direction="column">
             <Typography variant="h4" gutterBottom>
@@ -72,6 +71,30 @@ const ProjectDetail: React.FC = () => {
                 {projectDetails.project_name}
               </Typography>
             </Stack>
+
+            {userCtx?.claims.role == "SUPPLIER" && (
+              <>
+                <Stack direction="row" spacing={1}>
+                  <Typography>Client:</Typography>
+                  <Typography fontWeight="light">
+                    {projectDetails.customer_company}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Typography>Email:</Typography>
+                  <Typography fontWeight="light">
+                    {projectDetails.customer_email}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Typography>Phone Number:</Typography>
+                  <Typography fontWeight="light">
+                    {projectDetails.customer_phone_number}
+                  </Typography>
+                </Stack>
+              </>
+            )}
+
             <Stack direction="row" spacing={1}>
               <Typography>Created On:</Typography>
               <Typography fontWeight="light">
@@ -178,8 +201,8 @@ const ProjectDetail: React.FC = () => {
                         </Typography>
                       </TableCell>
                     ) : (
-                      <TableCell align="center">
-                        <Button variant="contained">Quote</Button>
+                      <TableCell width="10%" align="center">
+                        <Button variant="contained">View</Button>
                       </TableCell>
                     )}
                   </TableRow>
