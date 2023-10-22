@@ -120,7 +120,9 @@ const QuotationDetail: React.FC = () => {
           </Stack>
 
           <Typography variant="h5" color="var(--darkblue)">
-            {userCtx?.claims.role == "CUSTOMER" ? "Quoted By Supplier" : "Quoted By You"}
+            {userCtx?.claims.role == "CUSTOMER"
+              ? "Quoted By Supplier"
+              : "Quoted By You"}
           </Typography>
           {/* Quoted item list */}
           <TableContainer component={Paper} elevation={0} sx={{ my: "1.5rem" }}>
@@ -213,7 +215,9 @@ const QuotationDetail: React.FC = () => {
           </TableContainer>
 
           <Typography variant="h5" color="var(--darkblue)">
-          {userCtx?.claims.role == "CUSTOMER" ? "Your Item" : "Customer's Item"}
+            {userCtx?.claims.role == "CUSTOMER"
+              ? "Your Item"
+              : "Customer's Item"}
           </Typography>
           {/* Item list */}
           <TableContainer component={Paper} elevation={0} sx={{ my: "1.5rem" }}>
@@ -241,9 +245,12 @@ const QuotationDetail: React.FC = () => {
                   <TableCell align="center">
                     <Typography variant="body1">Quantity</Typography>
                   </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body1">Status</Typography>
-                  </TableCell>
+
+                  {userCtx?.claims.role == "CUSTOMER" && (
+                    <TableCell align="center">
+                      <Typography variant="body1">Status</Typography>
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableHead>
 
@@ -308,34 +315,59 @@ const QuotationDetail: React.FC = () => {
                       {quotationDetails.qt_items?.quantity}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">
-                    <Typography
-                      variant="body2"
-                      color={
-                        quotationDetails.qt_items?.status == "QUOTE ACCEPTED" ||
-                        quotationDetails.qt_items?.status == "COMPLETED"
-                          ? "var(--green)"
-                          : quotationDetails.qt_items?.status === "OFFERED"
-                          ? "var(--yellow)"
-                          : "var(--lightgrey-text)"
-                      }
-                    >
-                      {quotationDetails.qt_items?.status}
-                    </Typography>
-                  </TableCell>
+                  
+                  {userCtx?.claims.role == "CUSTOMER" && (
+                    <TableCell align="center">
+                      <Typography
+                        variant="body2"
+                        color={
+                          quotationDetails.qt_items?.status ==
+                            "QUOTE ACCEPTED" ||
+                          quotationDetails.qt_items?.status == "COMPLETED"
+                            ? "var(--green)"
+                            : quotationDetails.qt_items?.status === "OFFERED"
+                            ? "var(--yellow)"
+                            : "var(--lightgrey-text)"
+                        }
+                      >
+                        {quotationDetails.qt_items?.status}
+                      </Typography>
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
 
           {/* Action buttons */}
-          {userCtx?.claims.role == "CUSTOMER" && (
+          {userCtx?.claims.role == "CUSTOMER" ? (
             <Stack direction="row" justifyContent="flex-end" mt="1rem">
               <Button
                 variant="contained"
                 disabled={quotationDetails.qt_status != "PENDING"}
               >
                 Accept Quotation
+              </Button>
+            </Stack>
+          ) : (
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              mt="1rem"
+            >
+              <Button
+                variant="contained"
+                disabled={quotationDetails.qt_status != "PENDING"}
+              >
+                Update Quotation
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                disabled={quotationDetails.qt_status != "PENDING"}
+              >
+                Delete Quotation
               </Button>
             </Stack>
           )}

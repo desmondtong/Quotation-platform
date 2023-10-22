@@ -58,7 +58,9 @@ const ProjectDetail: React.FC = () => {
         >
           {/* Project details */}
           <Stack direction="column">
-            <Typography variant="h4" gutterBottom>Project Details</Typography>
+            <Typography variant="h4" gutterBottom>
+              Project Details
+            </Typography>
             <Stack direction="row" spacing={1}>
               <Typography>Project ID:</Typography>
               <Typography fontWeight="light">#{params.projectId}</Typography>
@@ -187,12 +189,16 @@ const ProjectDetail: React.FC = () => {
 
           {/* Action buttons */}
           {userCtx?.claims.role == "CUSTOMER" && (
-            <Stack direction="row" spacing={2} mt="1rem">
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              mt="1rem"
+            >
               <Button variant="contained">Update Project</Button>
               <Button variant="outlined" color="error">
                 Delete Project
               </Button>
-              <Button></Button>
             </Stack>
           )}
         </Box>
