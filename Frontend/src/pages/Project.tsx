@@ -89,21 +89,24 @@ const Project: React.FC = () => {
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body1">Project ID</Typography>
+                  </TableCell>
+                  <TableCell align="center">
                     <Typography variant="body1">Project Name</Typography>
                   </TableCell>
-                  <TableCell width="20%" align="center">
-                    <Typography variant="body1">Project ID & Date</Typography>
+                  <TableCell align="center">
+                    <Typography variant="body1">Date</Typography>
                   </TableCell>
-                  <TableCell width="20%" align="center">
+                  <TableCell align="center">
                     <Typography variant="body1">Nos. of Item</Typography>
                   </TableCell>
                   {userCtx?.claims.role == "CUSTOMER" ? (
-                    <TableCell width="20%" align="center">
+                    <TableCell align="center">
                       <Typography variant="body1">Status</Typography>
                     </TableCell>
                   ) : (
-                    <TableCell width="20%" align="center">
+                    <TableCell align="center">
                       <Typography variant="body1">Company</Typography>
                     </TableCell>
                   )}
@@ -120,38 +123,23 @@ const Project: React.FC = () => {
                     }
                     sx={{ cursor: "pointer" }}
                   >
-                    <TableCell>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        spacing={2}
-                      >
-                        <Typography variant="body1" fontWeight="medium">
-                          {row.project_name}
-                        </Typography>
-                      </Stack>
+                    <TableCell align="center">
+                      <Typography variant="body1" color="var(--darkblue)">
+                        #{row.project_id}
+                      </Typography>
                     </TableCell>
 
                     <TableCell align="center">
-                      <Stack direction="column">
-                        <Typography variant="body2" color="var(--darkblue)">
-                          #{row.project_id}
-                        </Typography>
-                        <Typography variant="body2" fontWeight="light">
-                          {new Date(row.datetime!).toDateString().slice(4)}
+                      <Typography variant="body2" fontWeight="medium">
+                        {row.project_name}
+                      </Typography>
+                    </TableCell>
 
-                          {/* only show time for CUSTOMER */}
-                          {userCtx?.claims.role == "CUSTOMER" && (
-                            <>
-                              ,{" "}
-                              {new Date(row.datetime!)
-                                .toTimeString()
-                                .slice(0, 5)}
-                            </>
-                          )}
-                        </Typography>
-                      </Stack>
+                    <TableCell align="center">
+                      <Typography variant="body2" fontWeight="light">
+                        {new Date(row.datetime!).toDateString().slice(4)}{", "}
+                        {new Date(row.datetime!).toTimeString().slice(0, 5)}
+                      </Typography>
                     </TableCell>
 
                     <TableCell align="center">

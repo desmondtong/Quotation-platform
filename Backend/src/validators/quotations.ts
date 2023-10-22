@@ -10,6 +10,7 @@ const validateIdInParam = [
 const validateGetQuotation = [
   body("project_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
   body("customer_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
+  body("quotation_id", "invalid id").optional().isLength({ min: 1, max: 10 }),
 ];
 
 const validateCreateQuotation = [

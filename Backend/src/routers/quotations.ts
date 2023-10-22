@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { authCustomer, authSupplier } from "../middleware/auth";
+import { auth, authCustomer, authSupplier } from "../middleware/auth";
 import {
   validateIdInParam,
   validateCreateQuotation,
@@ -17,6 +17,7 @@ import {
   getQuotationsByProjectId,
   getQuotationsByCustomerId,
   updateQuotation,
+  getQuotationsByQuotationId,
 } from "../controllers/quotations";
 
 router.put(
@@ -46,6 +47,13 @@ router.post(
   validateGetQuotation,
   checkValid,
   getQuotationsByCustomerId
+);
+router.post(
+  "/quotations-items/quotation_id",
+  auth,
+  validateGetQuotation,
+  checkValid,
+  getQuotationsByQuotationId
 );
 router.delete(
   "/quotations-items/:quotation_id",
