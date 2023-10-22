@@ -39,4 +39,5 @@ export interface RequestBody {
   unit_price?: number;
 
   "SUM(price)"?: number;
+  "COUNT(item_id)"?: number;
 }

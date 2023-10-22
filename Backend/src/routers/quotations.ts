@@ -11,7 +11,7 @@ import {
 import { validation as checkValid } from "../middleware/checkValid";
 import {
   createQuotation,
-  deleteQtItem,
+  // deleteQtItem,
   deleteQuotation,
   getAllSupplierQuotations,
   getQuotationsByItemId,
@@ -71,12 +71,12 @@ router.patch(
   updateQuotation
 );
 
-router.delete(
-  "/qt_items/:qt_item_id",
-  authSupplier,
-  validateIdInParam,
-  checkValid,
-  deleteQtItem
-);
+// router.delete(
+//   "/qt_items/:qt_item_id",
+//   authSupplier,
+//   validateIdInParam,
+//   checkValid,
+//   deleteQtItem
+// );
 
 export default router;

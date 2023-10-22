@@ -253,13 +253,12 @@ const updateProject = async (req: Request, res: Response) => {
       const [item_status] = await pool.query(
         `
         SELECT COUNT(STATUS) FROM items 
-        WHERE project_id = ? AND (status = ? OR status = ?)
+        WHERE project_id = ? AND (status = ? OR status = ?) AND is_deleted = 0
         `,
         [req.params.project_id, "NO OFFER", "OFFERED"]
       );
 
       if ((item_status as RequestBody[])[0]["COUNT(STATUS)"] == 0)
-        console.log("set is_active = 0");
       await pool.query(
         `
           UPDATE projects SET is_active = 0

@@ -49,6 +49,21 @@ const QuotationDetail: React.FC = () => {
     }
   };
 
+  const deleteQuotation = async () => {
+    const res: data = await fetchData(
+      "/api/quotations-items/" + params.quotationId,
+      "DELETE",
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      navigate(appPaths.quotation);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   useEffect(() => {
     getQuotationDetails();
   }, []);
@@ -315,7 +330,7 @@ const QuotationDetail: React.FC = () => {
                       {quotationDetails.qt_items?.quantity}
                     </Typography>
                   </TableCell>
-                  
+
                   {userCtx?.claims.role == "CUSTOMER" && (
                     <TableCell align="center">
                       <Typography
@@ -366,6 +381,7 @@ const QuotationDetail: React.FC = () => {
                 variant="outlined"
                 color="error"
                 disabled={quotationDetails.qt_status != "PENDING"}
+                onClick={deleteQuotation}
               >
                 Delete Quotation
               </Button>
