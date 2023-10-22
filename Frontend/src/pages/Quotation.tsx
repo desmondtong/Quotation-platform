@@ -141,7 +141,7 @@ const Quotation: React.FC = () => {
                     </TableCell>
 
                     <TableCell align="center">
-                      <Typography variant="body2">{row.project_id}</Typography>
+                      <Typography variant="body2">#{row.project_id}</Typography>
                     </TableCell>
 
                     <TableCell align="center">

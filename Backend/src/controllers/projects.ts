@@ -76,7 +76,11 @@ const getAllCustomerProjects = async (req: Request, res: Response) => {
 const getAllProjects = async (req: Request, res: Response) => {
   try {
     const [project] = await pool.query(
-      "SELECT * FROM projects WHERE is_active = 1"
+      `SELECT project_id, customer_id, project_name, datetime, is_active, is_deleted,
+      company AS customer_company
+      FROM projects p
+      JOIN users u ON u.user_id = p.customer_id 
+      WHERE is_active = 1`
     );
 
     for (const item of project as RequestBody[]) {

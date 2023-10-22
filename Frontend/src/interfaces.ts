@@ -67,8 +67,11 @@ export interface FetchedData {
   // quotations
   quotation_id?: number;
   qt_datetime?: string;
-  supplier_company?: string;
   qt_status?: string;
+
+  // user
+  supplier_company?: string;
+  customer_company?: string;
 }
 
 export interface Props {}

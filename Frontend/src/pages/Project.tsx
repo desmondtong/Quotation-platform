@@ -90,7 +90,7 @@ const Project: React.FC = () => {
               <Button variant="contained">+ New Project</Button>
             )}
           </Stack>
-
+          {JSON.stringify(projects)}
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
@@ -104,9 +104,13 @@ const Project: React.FC = () => {
                   <TableCell width="20%" align="center">
                     <Typography variant="body1">Nos. of Item</Typography>
                   </TableCell>
-                  {userCtx?.claims.role == "CUSTOMER" && (
+                  {userCtx?.claims.role == "CUSTOMER" ? (
                     <TableCell width="20%" align="center">
                       <Typography variant="body1">Status</Typography>
+                    </TableCell>
+                  ) : (
+                    <TableCell width="20%" align="center">
+                      <Typography variant="body1">Company</Typography>
                     </TableCell>
                   )}
                 </TableRow>
@@ -162,7 +166,7 @@ const Project: React.FC = () => {
                       </Typography>
                     </TableCell>
 
-                    {userCtx?.claims.role == "CUSTOMER" && (
+                    {userCtx?.claims.role == "CUSTOMER" ? (
                       <TableCell align="center">
                         <Typography
                           variant="body2"
@@ -173,6 +177,12 @@ const Project: React.FC = () => {
                           }
                         >
                           {row.is_active == 1 ? "Active" : "Inactive"}
+                        </Typography>
+                      </TableCell>
+                    ) : (
+                      <TableCell align="center">
+                        <Typography variant="body2">
+                          {row.customer_company}
                         </Typography>
                       </TableCell>
                     )}
