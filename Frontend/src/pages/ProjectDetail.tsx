@@ -151,7 +151,10 @@ const ProjectDetail: React.FC = () => {
 
               <TableBody>
                 {projectDetails.items?.map((row, idx) => (
-                  <TableRow hover key={idx} sx={{ cursor: "pointer" }}>
+                  <TableRow
+                    hover={userCtx?.claims.role == "CUSTOMER"}
+                    key={idx}
+                  >
                     <TableCell align="center">
                       <Typography
                         variant="body1"
