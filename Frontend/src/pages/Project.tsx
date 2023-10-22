@@ -59,10 +59,6 @@ const Project: React.FC = () => {
     }
   };
 
-  // const datetime = "2023-10-21T07:45:09.000Z";
-  // const date = new Date(datetime).toDateString().slice(4);
-  // const time = new Date(datetime).toTimeString().slice(0, 5);
-
   useEffect(() => {
     userCtx?.claims.role == "CUSTOMER" && getAllCustomerProjects();
     userCtx?.claims.role == "SUPPLIER" && getAllProjects();
@@ -169,12 +165,12 @@ const Project: React.FC = () => {
                         <Typography
                           variant="body2"
                           color={
-                            row.is_active === 1
+                            row.is_active
                               ? "var(--green)"
                               : "var(--lightgrey-text)"
                           }
                         >
-                          {row.is_active == 1 ? "Active" : "Inactive"}
+                          {row.is_active ? "Active" : "Inactive"}
                         </Typography>
                       </TableCell>
                     ) : (
