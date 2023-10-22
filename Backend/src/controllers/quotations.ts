@@ -74,7 +74,7 @@ const getAllSupplierQuotations = async (req: Request, res: Response) => {
       `SELECT 
       quotation_id, supplier_id, total_price, qt.datetime AS qt_datetime, status AS qt_status,
       
-      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS suppier_phone_number, 
+      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS supplier_phone_number, 
 
       project_name, p.project_id, p.datetime AS project_datetime
       
@@ -132,7 +132,7 @@ const getQuotationsByCustomerId = async (req: Request, res: Response) => {
       `SELECT 
       quotation_id, supplier_id, total_price, qt.datetime AS qt_datetime, status AS qt_status,
       
-      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS suppier_phone_number, 
+      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS supplier_phone_number, 
 
       project_name, p.project_id, p.datetime AS project_datetime
       
@@ -166,7 +166,7 @@ const getQuotationsByQuotationId = async (req: Request, res: Response) => {
       `SELECT 
       quotation_id, supplier_id, total_price, qt.datetime AS qt_datetime, status AS qt_status,
       
-      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS suppier_phone_number, 
+      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS supplier_phone_number, 
 
       project_name, p.project_id, p.datetime AS project_datetime
       
@@ -177,15 +177,20 @@ const getQuotationsByQuotationId = async (req: Request, res: Response) => {
       [quotation_id]
     );
 
-    for (const item of quotation as RequestBody[]) {
-      const [items] = await pool.query(
-        "SELECT * FROM qt_items WHERE quotation_id = ? AND is_deleted = 0",
-        [item.quotation_id]
-      );
-      item["qt_items"] = items as RequestBody[];
-    }
+    const quotationData = (quotation as RequestBody[])[0];
 
-    res.status(201).json({ status: "ok", msg: quotation });
+    const [items] = await pool.query(
+      `SELECT 
+      qt.qt_item_id, qt.quotation_id, qt.technology AS qt_technology, qt.material AS qt_material, qt.surface_finish AS qt_surface_finish, qt.item_name AS qt_item_name, qt.quantity AS qt_quantity, qt.unit_price AS qt_unit_price, qt.price AS qt_price, qt.is_deleted AS qt_is_deleted,
+      i.item_id, i.project_id, i.status, i.technology, i.material, i.surface_finish, i.item_name, i.quantity, i.is_deleted
+      FROM qt_items qt
+      JOIN items i ON qt.item_id = i.item_id  
+      WHERE qt.quotation_id = ? AND qt.is_deleted = 0`,
+      [quotation_id]
+    );
+    quotationData["qt_items"] = (items as RequestBody[])[0] as RequestBody[];
+
+    res.status(201).json({ status: "ok", msg: quotationData });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });
