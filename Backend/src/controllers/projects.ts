@@ -101,7 +101,12 @@ const getAllProjects = async (req: Request, res: Response) => {
 const getProjectById = async (req: Request, res: Response) => {
   try {
     const [project] = await pool.query(
-      "SELECT * FROM projects WHERE project_id = ?",
+      `SELECT
+      project_id, customer_id, project_name, datetime, is_active, is_deleted,
+      name AS customer_name, company AS customer_company, email AS customer_email, phone_number AS customer_phone_number
+      FROM projects p
+      JOIN users u ON p.customer_id = u.user_id 
+      WHERE project_id = ?`,
       [req.params.project_id]
     );
     const projectData = (project as RequestBody[])[0];

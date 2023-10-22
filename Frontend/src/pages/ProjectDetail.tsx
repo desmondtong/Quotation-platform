@@ -56,6 +56,7 @@ const ProjectDetail: React.FC = () => {
           component="main"
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
+          {JSON.stringify(projectDetails)}
           {/* Project details */}
           <Stack direction="column">
             <Typography variant="h4" gutterBottom>
