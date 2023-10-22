@@ -13,12 +13,13 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/NavBar";
-import UserContext from "../context/user";
-import { FetchedData, data } from "../interfaces";
-import useFetch from "../hooks/useFetch";
 import { appPaths } from "../appPath";
+import NavBar from "../components/NavBar";
 import SearchBar from "../components/SearchBar";
+import UserInfo from "../components/UserInfo";
+import UserContext from "../context/user";
+import useFetch from "../hooks/useFetch";
+import { FetchedData, data } from "../interfaces";
 
 const Project: React.FC = () => {
   const navigate = useNavigate();
@@ -75,10 +76,7 @@ const Project: React.FC = () => {
           component="main"
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
-          <Typography
-            variant="h5"
-            my="1rem"
-          >{`Welcome back, ${userCtx?.claims.name}!`}</Typography>
+          <UserInfo></UserInfo>
 
           <Stack
             direction="row"
@@ -90,7 +88,7 @@ const Project: React.FC = () => {
               <Button variant="contained">+ New Project</Button>
             )}
           </Stack>
-          {JSON.stringify(projects)}
+
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>

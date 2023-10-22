@@ -33,11 +33,11 @@ const NavBar: React.FC = () => {
 
   const navBar: navBarType[] = [
     {
-      item: userCtx?.claims.role == "CUSTOMER" ? "My Project" : "Project",
+      item: userCtx?.claims.role == "CUSTOMER" ? "My Projects" : "Projects",
       link: appPaths.project,
     },
     {
-      item: userCtx?.claims.role == "CUSTOMER" ? "Quotation" : "My Quotation",
+      item: userCtx?.claims.role == "CUSTOMER" ? "Quotations" : "My Quotations",
       link: appPaths.quotation,
     },
   ];

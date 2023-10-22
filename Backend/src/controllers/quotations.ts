@@ -71,7 +71,17 @@ const createQuotation = async (req: Request, res: Response) => {
 const getAllSupplierQuotations = async (req: Request, res: Response) => {
   try {
     const [quotation] = await pool.query(
-      "SELECT * FROM quotations WHERE supplier_id = ? AND is_deleted = 0",
+      `SELECT 
+      quotation_id, supplier_id, total_price, qt.datetime AS qt_datetime, status AS qt_status,
+      
+      u.name AS supplier_name, u.company AS supplier_company, u.email AS supplier_email, u.phone_number AS suppier_phone_number, 
+
+      project_name, p.project_id, p.datetime AS project_datetime
+      
+      FROM quotations qt
+      JOIN projects p ON p.project_id = qt.project_id
+      JOIN users u ON qt.supplier_id = u.user_id
+      WHERE qt.supplier_id = ? AND qt.is_deleted = 0`,
       [req.params.supplier_id]
     );
 

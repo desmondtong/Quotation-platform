@@ -12,12 +12,13 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { appPaths } from "../appPath";
 import NavBar from "../components/NavBar";
+import SearchBar from "../components/SearchBar";
+import UserInfo from "../components/UserInfo";
+import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, data } from "../interfaces";
-import UserContext from "../context/user";
-import { appPaths } from "../appPath";
-import SearchBar from "../components/SearchBar";
 
 const Quotation: React.FC = () => {
   const navigate = useNavigate();
@@ -44,8 +45,24 @@ const Quotation: React.FC = () => {
     }
   };
 
+  const getAllQuotationsBySupplierId = async () => {
+    const res: data = await fetchData(
+      "/api/quotations-items/" + userCtx?.claims.user_id,
+      "GET",
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setQuotations(res.data.msg);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   useEffect(() => {
     userCtx?.claims.role == "CUSTOMER" && getAllQuotationsByCustomerId();
+    userCtx?.claims.role == "SUPPLIER" && getAllQuotationsBySupplierId();
   }, []);
   return (
     <>
@@ -55,10 +72,7 @@ const Quotation: React.FC = () => {
           component="main"
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
-          <Typography
-            variant="h5"
-            my="1rem"
-          >{`Welcome back, ${userCtx?.claims.name}!`}</Typography>
+          <UserInfo></UserInfo>
 
           <Stack
             direction="row"
@@ -67,7 +81,7 @@ const Quotation: React.FC = () => {
           >
             <SearchBar></SearchBar>
           </Stack>
-
+          
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
             <Table sx={{ minWidth: 650 }}>
               <TableHead>
@@ -79,13 +93,16 @@ const Quotation: React.FC = () => {
                     <Typography variant="body1">Date</Typography>
                   </TableCell>
                   <TableCell align="center">
-                    <Typography variant="body1">Supplier</Typography>
+                    <Typography variant="body1">
+                      {userCtx?.claims.role == "CUSTOMER"
+                        ? "Supplier"
+                        : "Nos. of Items"}
+                    </Typography>
                   </TableCell>
-                  {userCtx?.claims.role == "CUSTOMER" && (
-                    <TableCell align="center">
-                      <Typography variant="body1">Quotation Status</Typography>
-                    </TableCell>
-                  )}
+                  <TableCell align="center">
+                    <Typography variant="body1">Quotation Status</Typography>
+                  </TableCell>
+
                   <TableCell align="center">
                     <Typography variant="body1">Project ID</Typography>
                   </TableCell>
@@ -120,7 +137,9 @@ const Quotation: React.FC = () => {
 
                     <TableCell align="center">
                       <Typography variant="body2">
-                        {row.supplier_company}
+                        {userCtx?.claims.role == "CUSTOMER"
+                          ? row.supplier_company
+                          : row.qt_items?.length}
                       </Typography>
                     </TableCell>
 

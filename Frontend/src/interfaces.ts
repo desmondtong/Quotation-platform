@@ -68,6 +68,7 @@ export interface FetchedData {
   quotation_id?: number;
   qt_datetime?: string;
   qt_status?: string;
+  qt_items?: FetchedData[];
 
   // user
   supplier_company?: string;
