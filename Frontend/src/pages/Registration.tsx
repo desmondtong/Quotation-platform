@@ -1,23 +1,24 @@
-import React, { useEffect, useState, useContext } from "react";
+import jwtDecode from "jwt-decode";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-// import UserContext from "../context/user";
+import { appPaths } from "../appPath";
+import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { data } from "../interfaces";
-import { appPaths } from "../appPath";
 
 const Registration: React.FC = () => {
   const fetchData = useFetch();
   const navigate = useNavigate();
-  // const userCtx = useContext(UserContext);
+  const userCtx = useContext(UserContext);
 
   const [roles, setRoles] = useState<string[]>([]);
   const [name, setName] = useState<string>("");
@@ -41,6 +42,7 @@ const Registration: React.FC = () => {
   };
 
   const handleRegister = async () => {
+    // check if password matching before register user
     if (password != confirmPassword) {
       return setWrongPassword(true);
     } else {
@@ -57,6 +59,24 @@ const Registration: React.FC = () => {
     });
 
     if (res.ok) {
+      // decode claim and save to localStorage & state
+      const decoded: any = jwtDecode(res.data?.access);
+      const claims = {
+        user_id: decoded.user_id,
+        email: decoded.email,
+        name: decoded.name,
+        company: decoded.company,
+        role: decoded.role,
+        phone_number: decoded.phone_number,
+      };
+      localStorage.setItem("claims", JSON.stringify(claims));
+      userCtx?.setClaims(claims);
+
+      // save access token to localStorage & state
+      localStorage.setItem("accessToken", JSON.stringify(res.data.access));
+      userCtx?.setAccessToken(res.data.accessToken);
+
+      navigate(appPaths.project);
     } else {
       alert(JSON.stringify(res.data));
     }
