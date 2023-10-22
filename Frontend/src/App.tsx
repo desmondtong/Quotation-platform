@@ -5,7 +5,6 @@ import Project from "./pages/Project";
 import Quotation from "./pages/Quotation";
 import ProjectDetail from "./pages/ProjectDetail";
 import QuotationDetail from "./pages/QuotationDetail";
-// import { useState } from 'react'
 
 function App() {
   return (
