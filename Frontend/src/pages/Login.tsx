@@ -45,7 +45,7 @@ const Login: React.FC = () => {
 
       // save access token to localStorage & state
       localStorage.setItem("accessToken", JSON.stringify(res.data.access));
-      userCtx?.setAccessToken(res.data.accessToken);
+      userCtx?.setAccessToken(res.data.access);
 
       navigate(appPaths.project);
     } else {

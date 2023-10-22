@@ -5,6 +5,8 @@ const Quotation: React.FC = () => {
   return (
     <>
       <NavBar></NavBar>
+
+      
     </>
   );
 };
