@@ -64,6 +64,25 @@ const QuotationDetail: React.FC = () => {
     }
   };
 
+  const declineQuotation = async () => {
+    const res: data = await fetchData(
+      "/api/decline-quotation",
+      "PATCH",
+      {
+        quotation_id: params.quotationId,
+        item_id: quotationDetails.qt_items?.item_id,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      getQuotationDetails();
+      navigate(appPaths.quotation);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   useEffect(() => {
     getQuotationDetails();
   }, []);
@@ -372,6 +391,7 @@ const QuotationDetail: React.FC = () => {
                 variant="outlined"
                 disabled={quotationDetails.qt_status != "PENDING"}
                 color="error"
+                onClick={declineQuotation}
               >
                 Decline Quotation
               </Button>

@@ -72,7 +72,7 @@ router.patch(
   updateQuotation
 );
 router.patch(
-  "/quotations-items/decline",
+  "/decline-quotation",
   authCustomer,
   validateQuotationActions,
   checkValid,
