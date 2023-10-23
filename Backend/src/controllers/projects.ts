@@ -259,13 +259,13 @@ const updateProject = async (req: Request, res: Response) => {
       );
 
       if ((item_status as RequestBody[])[0]["COUNT(STATUS)"] == 0)
-      await pool.query(
-        `
+        await pool.query(
+          `
           UPDATE projects SET is_active = 0
           WHERE project_id = ?
           `,
-        [req.params.project_id]
-      );
+          [req.params.project_id]
+        );
 
       await pool.query("COMMIT");
       res.status(201).json({ status: "ok", msg: "Project updated" });

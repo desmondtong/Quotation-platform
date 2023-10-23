@@ -21,10 +21,11 @@ const createQuotation = async (req: Request, res: Response) => {
       // loop through qt_items to create new qt_items within quotation
       for (const item of qt_items!) {
         await pool.query(
-          `INSERT INTO qt_items (quotation_id, technology, material, surface_finish, item_name, quantity, unit_price)
-              VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO qt_items (quotation_id, item_id, technology, material, surface_finish, item_name, quantity, unit_price)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             quotation_id,
+            item.item_id,
             item.technology,
             item.material,
             item.surface_finish,
@@ -50,6 +51,16 @@ const createQuotation = async (req: Request, res: Response) => {
         WHERE quotation_id = ?`,
         [total_price, quotation_id]
       );
+
+      // set customer item status to OFFERED
+      for (const item of qt_items!) {
+        await pool.query(
+          `
+          UPDATE items SET status = ?
+          WHERE item_id = ?`,
+          ["OFFERED", item.item_id]
+        );
+      }
 
       await pool.query("COMMIT");
       res.status(201).json({ status: "ok", msg: "Quotation created" });
