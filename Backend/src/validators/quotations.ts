@@ -72,9 +72,19 @@ const validateUpdateQuotation = [
     .isDecimal(),
 ];
 
+const validateQuotationActions = [
+  body("item_id", "item id is required")
+    .notEmpty()
+    .isLength({ min: 1, max: 10 }),
+  body("quotation_id", "quotation id is required")
+    .notEmpty()
+    .isLength({ min: 1, max: 10 }),
+];
+
 export {
   validateIdInParam,
   validateCreateQuotation,
   validateUpdateQuotation,
   validateGetQuotation,
+  validateQuotationActions,
 };

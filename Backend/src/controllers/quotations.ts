@@ -416,6 +416,56 @@ const updateQuotation = async (req: Request, res: Response) => {
 //   }
 // };
 
+const declineQuotation = async (req: Request, res: Response) => {
+  try {
+    const { quotation_id, item_id }: RequestBody = req.body;
+
+    // start transction to check and update quotation and item status
+    try {
+      await pool.query("START TRANSACTION");
+
+      // update quotation status to DECLINED
+      await pool.query(
+        `UPDATE quotations SET status = ?
+      WHERE quotation_id = ?`,
+        ["DECLINED", quotation_id]
+      );
+
+      // re-check customer's item status
+      const [nos_of_offers] = await pool.query(
+        `
+            SELECT COUNT(item_id) FROM qt_items
+            WHERE item_id = ? AND is_deleted = 0
+            `,
+        [item_id]
+      );
+
+      if ((nos_of_offers as RequestBody[])[0]["COUNT(item_id)"] == 0)
+        await pool.query(
+          `
+              UPDATE items SET status = ?
+              WHERE item_id = ?
+              `,
+          ["NO OFFER", item_id]
+        );
+
+      await pool.query("COMMIT");
+      res.status(201).json({ status: "ok", msg: "Quotation declined" });
+    } catch (error: any) {
+      await pool.query("ROLLBACK");
+
+      console.error(error.message);
+      res.status(500).json({
+        status: "error",
+        msg: "Rollback: Error in deleting quotation",
+      });
+    }
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
 export {
   createQuotation,
   getAllSupplierQuotations,
@@ -425,4 +475,5 @@ export {
   deleteQuotation,
   updateQuotation,
   // deleteQtItem,
+  declineQuotation,
 };

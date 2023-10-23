@@ -356,12 +356,24 @@ const QuotationDetail: React.FC = () => {
 
           {/* Action buttons */}
           {userCtx?.claims.role == "CUSTOMER" ? (
-            <Stack direction="row" justifyContent="flex-end" mt="1rem">
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              mt="1rem"
+              spacing={2}
+            >
               <Button
                 variant="contained"
                 disabled={quotationDetails.qt_status != "PENDING"}
               >
                 Accept Quotation
+              </Button>
+              <Button
+                variant="outlined"
+                disabled={quotationDetails.qt_status != "PENDING"}
+                color="error"
+              >
+                Decline Quotation
               </Button>
             </Stack>
           ) : (

@@ -7,17 +7,18 @@ import {
   validateCreateQuotation,
   validateUpdateQuotation,
   validateGetQuotation,
+  validateQuotationActions,
 } from "../validators/quotations";
 import { validation as checkValid } from "../middleware/checkValid";
 import {
   createQuotation,
-  // deleteQtItem,
   deleteQuotation,
   getAllSupplierQuotations,
   getQuotationsByItemId,
   getQuotationsByCustomerId,
   updateQuotation,
   getQuotationsByQuotationId,
+  declineQuotation,
 } from "../controllers/quotations";
 
 router.put(
@@ -69,6 +70,13 @@ router.patch(
   validateUpdateQuotation,
   checkValid,
   updateQuotation
+);
+router.patch(
+  "/quotations-items/decline",
+  authCustomer,
+  validateQuotationActions,
+  checkValid,
+  declineQuotation
 );
 
 // router.delete(
