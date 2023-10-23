@@ -19,6 +19,7 @@ import {
   updateQuotation,
   getQuotationsByQuotationId,
   declineQuotation,
+  acceptQuotation,
 } from "../controllers/quotations";
 
 router.put(
@@ -77,6 +78,13 @@ router.patch(
   validateQuotationActions,
   checkValid,
   declineQuotation
+);
+router.patch(
+  "/accept-quotation",
+  authCustomer,
+  validateQuotationActions,
+  checkValid,
+  acceptQuotation
 );
 
 // router.delete(

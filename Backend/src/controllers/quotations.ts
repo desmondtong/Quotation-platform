@@ -434,10 +434,11 @@ const declineQuotation = async (req: Request, res: Response) => {
       // re-check customer's item status
       const [nos_of_offers] = await pool.query(
         `
-            SELECT COUNT(item_id) FROM qt_items
-            WHERE item_id = ? AND is_deleted = 0
+            SELECT COUNT(item_id) FROM qt_items qt
+            JOIN quotations q ON q.quotation_id = qt.quotation_id
+            WHERE item_id = ? AND qt.is_deleted = 0 AND NOT q.status = ?
             `,
-        [item_id]
+        [item_id, "DECLINED"]
       );
 
       if ((nos_of_offers as RequestBody[])[0]["COUNT(item_id)"] == 0)
@@ -466,6 +467,63 @@ const declineQuotation = async (req: Request, res: Response) => {
   }
 };
 
+const acceptQuotation = async (req: Request, res: Response) => {
+  try {
+    const { quotation_id, item_id }: RequestBody = req.body;
+
+    // start transction to check and update quotation and item status
+    try {
+      await pool.query("START TRANSACTION");
+
+      // update quotation status to ACCEPTED
+      await pool.query(
+        `UPDATE quotations SET status = ?
+      WHERE quotation_id = ?`,
+        ["ACCEPTED", quotation_id]
+      );
+
+      // update customer item status to QUOTE ACCEPTED
+      await pool.query(
+        `UPDATE items SET status = ?
+        WHERE item_id = ?`,
+        ["QUOTE ACCEPTED", item_id]
+      );
+
+      // get other quotation ID that quote to this item
+      const [qt_ids] = await pool.query(
+        `SELECT qt.quotation_id FROM qt_items qt
+        JOIN quotations q ON qt.quotation_id = q.quotation_id
+        WHERE qt.item_id = ? AND q.status = ?`,
+        [item_id, "PENDING"]
+      );
+      console.log(qt_ids);
+
+      // change all other quotation to this item to DECLINED
+      for (const item of qt_ids as RequestBody[]) {
+        await pool.query(
+          `UPDATE quotations SET status = ?
+          WHERE quotation_id = ?`,
+          ["DECLINED", item.quotation_id]
+        );
+      }
+
+      await pool.query("COMMIT");
+      res.status(201).json({ status: "ok", msg: "Quotation declined" });
+    } catch (error: any) {
+      await pool.query("ROLLBACK");
+
+      console.error(error.message);
+      res.status(500).json({
+        status: "error",
+        msg: "Rollback: Error in deleting quotation",
+      });
+    }
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
 export {
   createQuotation,
   getAllSupplierQuotations,
@@ -476,4 +534,5 @@ export {
   updateQuotation,
   // deleteQtItem,
   declineQuotation,
+  acceptQuotation,
 };

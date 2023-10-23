@@ -83,6 +83,25 @@ const QuotationDetail: React.FC = () => {
     }
   };
 
+  const acceptQuotation = async () => {
+    const res: data = await fetchData(
+      "/api/accept-quotation",
+      "PATCH",
+      {
+        quotation_id: params.quotationId,
+        item_id: quotationDetails.qt_items?.item_id,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      getQuotationDetails();
+      navigate(appPaths.quotation);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   useEffect(() => {
     getQuotationDetails();
   }, []);
@@ -384,6 +403,7 @@ const QuotationDetail: React.FC = () => {
               <Button
                 variant="contained"
                 disabled={quotationDetails.qt_status != "PENDING"}
+                onClick={acceptQuotation}
               >
                 Accept Quotation
               </Button>
