@@ -35,7 +35,7 @@ const createProject = async (req: Request, res: Response) => {
       }
 
       await pool.query("COMMIT");
-      res.status(201).json({ status: "ok", msg: "Project created" });
+      res.status(201).json({ status: "ok", msg: project_id });
     } catch (error: any) {
       await pool.query("ROLLBACK");
 

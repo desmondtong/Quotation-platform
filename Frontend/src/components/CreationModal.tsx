@@ -1,21 +1,24 @@
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    MenuItem,
-    Stack,
-    TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Stack,
+  TextField,
 } from "@mui/material";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, Props, data } from "../interfaces";
+import { useNavigate } from "react-router-dom";
+import { appPaths } from "../appPath";
 
 const CreationModal: React.FC<Props> = (props) => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [technologies, setTechnologies] = useState<string[]>([]);
   const [materials, setMaterials] = useState<string[]>([]);
@@ -39,8 +42,8 @@ const CreationModal: React.FC<Props> = (props) => {
 
   // function
   const handleCreateProject = () => {
-    // filter out c_*
-    // use value from c_* if user select Custom
+    // filter out custom input
+    // use value from custom input if user select Custom
     const items = projectItems.map((item) => ({
       technology: item.technology?.includes("Custom")
         ? item.c_technology
@@ -97,6 +100,9 @@ const CreationModal: React.FC<Props> = (props) => {
     if (res.ok) {
       props.setOpenCreateModal?.(false);
       props.getAllCustomerProjects?.();
+      const project_id = res.data.msg;
+
+      navigate(appPaths.project + "/" + project_id);
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -164,7 +170,7 @@ const CreationModal: React.FC<Props> = (props) => {
         <DialogTitle sx={{ m: "1rem" }} variant="h5">
           New Project
         </DialogTitle>
-        {JSON.stringify(projectItems)}
+
         <DialogContent sx={{ m: "1rem" }}>
           <TextField
             autoFocus
