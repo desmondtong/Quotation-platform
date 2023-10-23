@@ -20,6 +20,7 @@ import UserInfo from "../components/UserInfo";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, data } from "../interfaces";
+import CreationModal from "../components/CreationModal";
 
 const Project: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const Project: React.FC = () => {
   const fetchData = useFetch();
 
   const [projects, setProjects] = useState<FetchedData[]>([]);
+  const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
 
   // endpoint
   const getAllCustomerProjects = async () => {
@@ -81,7 +83,12 @@ const Project: React.FC = () => {
           >
             <SearchBar></SearchBar>
             {userCtx?.claims.role == "CUSTOMER" && (
-              <Button variant="contained">+ New Project</Button>
+              <Button
+                variant="contained"
+                onClick={() => setOpenCreateModal(true)}
+              >
+                + New Project
+              </Button>
             )}
           </Stack>
 
@@ -176,6 +183,12 @@ const Project: React.FC = () => {
           </TableContainer>
         </Box>
       </Box>
+
+      <CreationModal
+        openCreateModal={openCreateModal}
+        setOpenCreateModal={setOpenCreateModal}
+        getAllCustomerProjects={getAllCustomerProjects}
+      ></CreationModal>
     </>
   );
 };

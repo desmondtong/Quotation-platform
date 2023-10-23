@@ -58,8 +58,11 @@ export interface FetchedData {
   // items
   item_id?: number;
   technology?: string;
+  c_technology?: string;
   material?: string;
+  c_material?: string;
   surface_finish?: string;
+  c_surface_finish?: string;
   status?: string;
   item_name?: string;
   quantity?: number;
@@ -93,4 +96,5 @@ export interface Props {
   // createionModal
   openCreateModal?: boolean;
   setOpenCreateModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  getAllCustomerProjects?: () => Promise<void>;
 }
