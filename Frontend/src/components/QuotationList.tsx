@@ -1,10 +1,10 @@
 import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Stack,
-    Typography
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +45,9 @@ const QuotationList: React.FC<Props> = (props) => {
     <>
       <Dialog
         open={props.openQtList!}
-        onClose={() => props.setOpenQtList?.(false)}
+        onClose={() => {
+          props.setOpenQtList?.(false);
+        }}
         scroll="body"
       >
         <DialogTitle sx={{ m: "1rem" }} variant="h5">

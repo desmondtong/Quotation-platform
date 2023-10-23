@@ -19,6 +19,7 @@ import useFetch from "../hooks/useFetch";
 import { FetchedData, data } from "../interfaces";
 import QuotationList from "../components/QuotationList";
 import { appPaths } from "../appPath";
+import CreateQuotationModal from "../components/CreateQuotationModal";
 
 const ProjectDetail: React.FC = () => {
   const fetchData = useFetch();
@@ -28,7 +29,9 @@ const ProjectDetail: React.FC = () => {
 
   const [projectDetails, setProjectDetails] = useState<FetchedData>({});
   const [openQtList, setOpenQtList] = useState<boolean>(false);
+  const [openNewQuote, setOpenNewQuote] = useState<boolean>(false);
   const [itemId, setItemId] = useState<number>(0);
+  const [itemInfo, setItemInfo] = useState<FetchedData>({});
 
   const datetime = projectDetails.datetime;
   const date = new Date(datetime!).toDateString().slice(4);
@@ -40,6 +43,11 @@ const ProjectDetail: React.FC = () => {
       setOpenQtList(true);
       setItemId(item_id);
     }
+  };
+
+  const handleCreateNewQuote = (item: FetchedData) => {
+    setOpenNewQuote(true);
+    setItemInfo(item);
   };
 
   // endpoint
@@ -238,7 +246,12 @@ const ProjectDetail: React.FC = () => {
                       </TableCell>
                     ) : (
                       <TableCell width="10%" align="center">
-                        <Button variant="contained">View</Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => handleCreateNewQuote(row)}
+                        >
+                          Quote
+                        </Button>
                       </TableCell>
                     )}
                   </TableRow>
@@ -268,8 +281,13 @@ const ProjectDetail: React.FC = () => {
         openQtList={openQtList}
         setOpenQtList={setOpenQtList}
         itemId={itemId}
-        setItemId={setItemId}
       ></QuotationList>
+
+      <CreateQuotationModal
+        openNewQuote={openNewQuote}
+        setOpenNewQuote={setOpenNewQuote}
+        itemInfo={itemInfo}
+      ></CreateQuotationModal>
     </>
   );
 };

@@ -20,7 +20,7 @@ import UserInfo from "../components/UserInfo";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, data } from "../interfaces";
-import CreationModal from "../components/CreationModal";
+import CreationModal from "../components/CreateProjectModal";
 
 const Project: React.FC = () => {
   const navigate = useNavigate();

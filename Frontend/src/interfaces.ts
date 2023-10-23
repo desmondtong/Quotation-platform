@@ -93,8 +93,13 @@ export interface Props {
   itemId?: number;
   setItemId?: React.Dispatch<React.SetStateAction<number>>;
 
-  // createionModal
+  // createProjectModal
   openCreateModal?: boolean;
   setOpenCreateModal?: React.Dispatch<React.SetStateAction<boolean>>;
   getAllCustomerProjects?: () => Promise<void>;
+
+  // createQuoteModal
+  openNewQuote?: boolean;
+  setOpenNewQuote?: React.Dispatch<React.SetStateAction<boolean>>;
+  itemInfo?: FetchedData;
 }
