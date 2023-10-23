@@ -21,6 +21,9 @@ const validateCreateQuotation = [
     .isLength({ min: 1, max: 10 }),
 
   check("qt_items", "qt_items must be an array").notEmpty().isArray(),
+  check("qt_items.*.item_id", "item id is required")
+    .notEmpty()
+    .isLength({ min: 1, max: 10 }),
   check("qt_items.*.technology", "technology is required")
     .notEmpty()
     .isString(),

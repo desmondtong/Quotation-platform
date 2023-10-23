@@ -15,7 +15,7 @@ import { FetchedData, Props, data } from "../interfaces";
 import { useNavigate } from "react-router-dom";
 import { appPaths } from "../appPath";
 
-const CreationModal: React.FC<Props> = (props) => {
+const CreateProjectModal: React.FC<Props> = (props) => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
@@ -212,7 +212,7 @@ const CreationModal: React.FC<Props> = (props) => {
                 select
                 required
                 margin="normal"
-                label={`Technology-${index}`}
+                label={`Technology-${index+1}`}
                 type="text"
                 fullWidth
                 defaultValue={technologies[0]}
@@ -245,7 +245,7 @@ const CreationModal: React.FC<Props> = (props) => {
                 required
                 margin="normal"
                 id="material"
-                label={`Material-${index}`}
+                label={`Material-${index+1}`}
                 type="text"
                 fullWidth
                 defaultValue={materials[0]}
@@ -278,7 +278,7 @@ const CreationModal: React.FC<Props> = (props) => {
                 required
                 margin="normal"
                 id="surfaceFinish"
-                label={`Surface Finish-${index}`}
+                label={`Surface Finish-${index+1}`}
                 type="text"
                 fullWidth
                 defaultValue={surfaceFinishes[0]}
@@ -345,4 +345,4 @@ const CreationModal: React.FC<Props> = (props) => {
   );
 };
 
-export default CreationModal;
+export default CreateProjectModal;

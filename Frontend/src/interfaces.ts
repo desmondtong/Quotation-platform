@@ -75,6 +75,7 @@ export interface FetchedData {
 
   // qt_items
   price?: string;
+  unit_price?: number;
 
   // user
   company?: string;
@@ -102,4 +103,5 @@ export interface Props {
   openNewQuote?: boolean;
   setOpenNewQuote?: React.Dispatch<React.SetStateAction<boolean>>;
   itemInfo?: FetchedData;
+  projectId?: string;
 }

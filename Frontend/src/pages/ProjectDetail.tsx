@@ -287,6 +287,7 @@ const ProjectDetail: React.FC = () => {
         openNewQuote={openNewQuote}
         setOpenNewQuote={setOpenNewQuote}
         itemInfo={itemInfo}
+        projectId={params.projectId}
       ></CreateQuotationModal>
     </>
   );

@@ -63,7 +63,7 @@ const createQuotation = async (req: Request, res: Response) => {
       }
 
       await pool.query("COMMIT");
-      res.status(201).json({ status: "ok", msg: "Quotation created" });
+      res.status(201).json({ status: "ok", msg: quotation_id });
     } catch (error: any) {
       await pool.query("ROLLBACK");
 

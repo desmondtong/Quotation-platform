@@ -1,21 +1,20 @@
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    MenuItem,
+    Stack,
+    TextField
 } from "@mui/material";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { appPaths } from "../appPath";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { FetchedData, Props, data } from "../interfaces";
-import { useNavigate } from "react-router-dom";
-import { appPaths } from "../appPath";
 
 const CreateQuotationModal: React.FC<Props> = (props) => {
   const fetchData = useFetch();
@@ -35,12 +34,36 @@ const CreateQuotationModal: React.FC<Props> = (props) => {
     c_material: "",
     c_surface_finish: "",
     quantity: 0,
+    unit_price: 0,
   };
+
   const [quoteItems, setQuoteItems] = useState<FetchedData>(defaultItems);
 
   // function
   const handleCreateQuotation = () => {
-    console.log(quoteItems);
+    const qt_items = {
+      technology: quoteItems.technology?.includes("Custom")
+        ? quoteItems.c_technology
+        : quoteItems.technology,
+      material: quoteItems.material?.includes("Custom")
+        ? quoteItems.c_material
+        : quoteItems.material,
+      surface_finish: quoteItems.surface_finish?.includes("Custom")
+        ? quoteItems.c_surface_finish
+        : quoteItems.surface_finish,
+      quantity: quoteItems.quantity,
+      item_name: quoteItems.item_name,
+      unit_price: quoteItems.unit_price,
+      item_id: props.itemInfo?.item_id,
+    };
+
+    const quotationItemBody = {
+      supplier_id: userCtx?.claims.user_id,
+      project_id: Number(props.projectId),
+      qt_items: [qt_items],
+    };
+
+    createQuotation(quotationItemBody);
   };
 
   const handleCancel = () => {
@@ -55,7 +78,24 @@ const CreateQuotationModal: React.FC<Props> = (props) => {
   };
 
   // endpoint
-  const createQuotation = async () => {};
+  const createQuotation = async (body: FetchedData) => {
+    const res: data = await fetchData(
+      "/api/quotations-items",
+      "PUT",
+      body,
+      userCtx?.accessToken
+    );
+    console.log(body);
+
+    if (res.ok) {
+      props.setOpenNewQuote?.(false);
+      const quotation_id = res.data.msg;
+
+      navigate(appPaths.quotation + "/" + quotation_id);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
 
   const getTechnologies = async () => {
     const res: data = await fetchData(
@@ -293,12 +333,23 @@ const CreateQuotationModal: React.FC<Props> = (props) => {
               fullWidth
               onChange={(e) => handleInputChange("quantity", e.target.value)}
             />
+
+            <TextField
+              autoFocus
+              required
+              margin="normal"
+              id="unitprice"
+              label="Unit Price"
+              type="number"
+              fullWidth
+              onChange={(e) => handleInputChange("unit_price", e.target.value)}
+            />
           </Stack>
         </DialogContent>
 
         <DialogActions sx={{ mx: "1rem", mb: "1rem" }}>
           <Button variant="contained" onClick={handleCreateQuotation}>
-            Create
+            Quote
           </Button>
           <Button variant="outlined" onClick={handleCancel}>
             Cancel
