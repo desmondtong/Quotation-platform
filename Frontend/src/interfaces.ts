@@ -84,8 +84,13 @@ export interface FetchedData {
 }
 
 export interface Props {
+  // quotationListModal
   openQtList?: boolean;
   setOpenQtList?: React.Dispatch<React.SetStateAction<boolean>>;
   itemId?: number;
   setItemId?: React.Dispatch<React.SetStateAction<number>>;
+
+  // createionModal
+  openCreateModal?: boolean;
+  setOpenCreateModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }

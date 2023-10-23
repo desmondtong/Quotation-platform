@@ -1,19 +1,17 @@
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  Typography,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Stack,
+    Typography
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import useFetch from "../hooks/useFetch";
-import { FetchedData, Props, data } from "../interfaces";
-import UserContext from "../context/user";
 import { useNavigate } from "react-router-dom";
 import { appPaths } from "../appPath";
+import UserContext from "../context/user";
+import useFetch from "../hooks/useFetch";
+import { FetchedData, Props, data } from "../interfaces";
 
 const QuotationList: React.FC<Props> = (props) => {
   const fetchData = useFetch();
@@ -22,6 +20,7 @@ const QuotationList: React.FC<Props> = (props) => {
 
   const [quotationList, setQuotationList] = useState<FetchedData[]>([]);
 
+  // endpoint
   const getQuotationByItemId = async () => {
     const res: data = await fetchData(
       "/api/quotations-items/item_id",
@@ -34,11 +33,11 @@ const QuotationList: React.FC<Props> = (props) => {
 
     if (res.ok) {
       setQuotationList(res.data.msg);
-      console.log(res.data.msg);
     } else {
       alert(JSON.stringify(res.data));
     }
   };
+
   useEffect(() => {
     userCtx?.claims.role == "CUSTOMER" && getQuotationByItemId();
   }, [props.itemId]);
@@ -49,16 +48,10 @@ const QuotationList: React.FC<Props> = (props) => {
         onClose={() => props.setOpenQtList?.(false)}
         scroll="body"
       >
-        <DialogTitle sx={{ p: 0 }} className="pic-display"></DialogTitle>
+        <DialogTitle sx={{ m: "1rem" }} variant="h5">
+          Available Quotations for Item #{props.itemId}
+        </DialogTitle>
         <DialogContent sx={{ m: "1rem" }}>
-          <DialogContentText
-            my="1rem"
-            variant="h5"
-            color="var(--darkgrey-text)"
-          >
-            Available Quotations for Item #{props.itemId}
-          </DialogContentText>
-
           {quotationList.length ? (
             <>
               {quotationList.map((item, idx) => (
@@ -68,7 +61,7 @@ const QuotationList: React.FC<Props> = (props) => {
                   justifyContent="space-between"
                   alignItems="center"
                   spacing={3}
-                  mt="2rem"
+                  mb="1rem"
                 >
                   <Typography color="var(--darkblue)">
                     #{item.quotation_id}
@@ -106,8 +99,6 @@ const QuotationList: React.FC<Props> = (props) => {
             </Typography>
           )}
         </DialogContent>
-
-        <DialogActions></DialogActions>
       </Dialog>
     </>
   );
