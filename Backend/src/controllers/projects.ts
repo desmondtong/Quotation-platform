@@ -85,11 +85,13 @@ const getAllProjects = async (req: Request, res: Response) => {
 
     for (const item of project as RequestBody[]) {
       const [items] = await pool.query(
-        "SELECT * FROM items WHERE project_id = ? AND is_deleted = 0",
-        [item.project_id]
+        `SELECT * FROM items 
+        WHERE project_id = ? AND is_deleted = 0 AND (status = ? OR status = ?)`,
+        [item.project_id, "NO OFFER", "OFFERED"]
       );
       item["items"] = items as RequestBody[];
     }
+    console.log(project);
 
     res.status(201).json({ status: "ok", msg: project });
   } catch (error: any) {
@@ -114,6 +116,33 @@ const getProjectById = async (req: Request, res: Response) => {
     const [items] = await pool.query(
       "SELECT * FROM items WHERE project_id = ? AND is_deleted = 0",
       [projectData.project_id]
+    );
+    projectData["items"] = items as RequestBody[];
+
+    res.status(201).json({ status: "ok", msg: projectData });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Server error" });
+  }
+};
+
+const getProjectByIdSupplier = async (req: Request, res: Response) => {
+  try {
+    const [project] = await pool.query(
+      `SELECT
+      p.*,
+      name AS customer_name, company AS customer_company, email AS customer_email, phone_number AS customer_phone_number
+      FROM projects p
+      JOIN users u ON p.customer_id = u.user_id 
+      WHERE project_id = ?`,
+      [req.params.project_id]
+    );
+    const projectData = (project as RequestBody[])[0];
+
+    const [items] = await pool.query(
+      `SELECT * FROM items 
+      WHERE project_id = ? AND is_deleted = 0 AND (status = ? OR status = ?)`,
+      [projectData.project_id, "NO OFFER", "OFFERED"]
     );
     projectData["items"] = items as RequestBody[];
 
@@ -305,6 +334,7 @@ export {
   getAllCustomerProjects,
   getAllProjects,
   getProjectById,
+  getProjectByIdSupplier,
   deleteProject,
   updateProject,
   deleteItem,

@@ -66,6 +66,21 @@ const ProjectDetail: React.FC = () => {
     }
   };
 
+  const getProjectDetailsSupplier = async () => {
+    const res: data = await fetchData(
+      "/api/projects-items/supplier/" + params.projectId,
+      "POST",
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setProjectDetails(res.data.msg);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   const deleteProject = async () => {
     const res: data = await fetchData(
       "/api/projects-items/" + params.projectId,
@@ -83,7 +98,8 @@ const ProjectDetail: React.FC = () => {
   };
 
   useEffect(() => {
-    getProjectDetails();
+    userCtx?.claims.role == "CUSTOMER" && getProjectDetails();
+    userCtx?.claims.role == "SUPPLIER" && getProjectDetailsSupplier();
   }, []);
   return (
     <>

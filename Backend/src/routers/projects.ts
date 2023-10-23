@@ -16,6 +16,7 @@ import {
   deleteProject,
   updateProject,
   deleteItem,
+  getProjectByIdSupplier,
 } from "../controllers/projects";
 
 router.put(
@@ -35,10 +36,17 @@ router.get(
 router.get("/projects-items", authSupplier, getAllProjects);
 router.post(
   "/projects-items/:project_id",
-  auth,
+  authCustomer,
   validateIdInParam,
   checkValid,
   getProjectById
+);
+router.post(
+  "/projects-items/supplier/:project_id",
+  authSupplier,
+  validateIdInParam,
+  checkValid,
+  getProjectByIdSupplier
 );
 router.delete(
   "/projects-items/:project_id",
