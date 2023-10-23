@@ -96,7 +96,7 @@ const Registration: React.FC = () => {
               fontWeight="bold"
               gutterBottom
               mb="2rem"
-              color="var(--orange)"
+              color="var(--darkblue)"
             >
               Register
             </Typography>
@@ -205,7 +205,6 @@ const Registration: React.FC = () => {
               variant="contained"
               sx={{ mt: "3rem", mb: "1rem" }}
               onClick={handleRegister}
-              color="warning"
             >
               CREATE ACCOUNT
             </Button>

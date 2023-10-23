@@ -62,7 +62,7 @@ const Login: React.FC = () => {
               variant="h3"
               align="left"
               fontWeight="bold"
-              color="var(--orange)"
+              color="var(--darkblue)"
             >
               Welcome Back!
             </Typography>
@@ -97,7 +97,6 @@ const Login: React.FC = () => {
               variant="contained"
               sx={{ mt: "3rem", mb: "1rem" }}
               onClick={handleLogin}
-              color="warning"
             >
               LOG IN
             </Button>
